@@ -48,7 +48,7 @@
 %% Abstract                         %%
 %%==================================%%
 
-\abstract{Computational folkloristics and Automated Story Generation (ASG) systems have historically relied on Indo-European formalist paradigms, notably Vladimir Propp's 31-function linear quest model. When applied to indigenous African oral traditions—specifically the Ju|'hoansi San people of the Kalahari—these European formalisms fail due to implicit Western assumptions regarding static character archetypes, linear progression toward individual wealth or monarchy ($W^*$), and punitive executions of antagonists. Ju|'hoansi narratives are structurally compact, episodic, symmetrical, and governed by radical egalitarianism, communal resource sharing ($zo$ honey, meat, water), complex kinship networks, and spatial binary oppositions between the human Camp and the supernatural Bush (Claude Lévi-Strauss). In this work, we present the \textbf{Ju|'hoansi Narrative Agentic Generator (\texttt{jnang})}, an ontologically grounded multi-agent narrative architecture engineered to preserve, generate, evaluate, and structurally adapt culturally authentic folktales. The system integrates an RDF Turtle narrative ontology (\texttt{folktales\_ontology.ttl}) and a Neo4j Knowledge Graph with a 3-agent LangGraph pipeline comprising a \textit{Generator Agent} (constrained by Alan Dundes' 8 canonical motifemes and spatial tracking), a \textit{Classifier Agent} (extracting structural motifemes and Proppian moves), and an \textit{Evaluator/Grader Agent} (scoring cultural authenticity and enforcing zero-tolerance penalties for unpunished resource hoarding). Furthermore, we demonstrate how \texttt{jnang} serves as a structural and cultural adaptation framework for Machine Translation (MT) systems in under-resourced indigenous African languages. Experimental evaluations confirm 100\% adherence to egalitarian non-hoarding constraints and high structural fidelity without Eurocentric drift.}
+\abstract{Automated Story Generation (ASG) systems rely on Indo-European formalist paradigms, such as Vladimir Propp's 31-function quest model. Applied to indigenous African oral traditions, including the Ju|'hoansi San of the Kalahari, these formalisms fail. They assume static character archetypes, linear progression toward individual wealth or monarchy ($W^*$), and punitive execution of antagonists. Ju|'hoansi narratives are compact, episodic, and symmetrical. Radical egalitarianism, communal resource sharing ($zo$ honey, meat, water), complex kinship networks, and spatial oppositions between the human Camp and the supernatural Bush govern these stories. We introduce the \textbf{Ju|'hoansi Narrative Agentic Generator (\texttt{jnang})}, an ontologically grounded multi-agent architecture that preserves, generates, evaluates, and adapts culturally authentic folktales. The system connects an RDF Turtle narrative ontology (\texttt{folktales\_ontology.ttl}) and a Neo4j Knowledge Graph to a 3-agent LangGraph pipeline. The pipeline includes a \textit{Generator Agent} (constrained by Alan Dundes' 8 motifemes and spatial tracking), a \textit{Classifier Agent} (extracting structural motifemes and Proppian moves), and an \textit{Evaluator Agent} (scoring cultural authenticity and penalizing unpunished resource hoarding). \texttt{jnang} also provides structural and cultural adaptation for Machine Translation (MT) systems in under-resourced indigenous African languages. In evaluations, \texttt{jnang} achieved 100\% adherence to egalitarian non-hoarding constraints and high structural fidelity without Eurocentric tropes.}
 
 \keywords{Computational Folkloristics, Indigenous Knowledge Preservation, Large Language Models, Multi-Agent Systems, Knowledge Graphs, Ju|'hoansi, Narrative Generation, Machine Translation}
 
@@ -56,42 +56,42 @@
 
 \section{Introduction}\label{sec:intro}
 
-Natural Language Processing (NLP) and Artificial Intelligence (AI) have achieved unprecedented progress in automated text synthesis and narrative generation. However, the overwhelming majority of current Large Language Models (LLMs) and computational narrative frameworks are pre-trained on high-resource Indo-European text corpora. Consequently, unconstrained LLMs exhibit profound cultural bias when tasked with generating narratives from under-represented indigenous African oral traditions. When prompted to generate stories for indigenous groups such as the Ju|'hoansi San people of southern Africa, standard language models routinely inject incongruous Western tropes—such as monarchs, gold coins, magical swords, individual ascension, and punitive executions.
+Large Language Models (LLMs) and computational narrative frameworks train predominantly on high-resource Indo-European corpora. When generating narratives for under-represented indigenous African oral traditions, unconstrained LLMs introduce cultural bias. Standard models prompt-engineered for the Ju|'hoansi San people inject Western tropes: monarchs, gold coins, magical swords, individual ascension, and punitive executions.
 
-Historically, formalist narrative modeling has built upon Vladimir Propp's seminal work \textit{Morphology of the Folktale} (1928) \cite{propp1928morphology}. Propp identified 31 narrative functions structured around an individual hero's quest, terminating in royal matrimony or material enrichment ($W^*$). While effective for Russian fairy tales, Proppian formalism misrepresents Ju|'hoansi oral epistemologies. Ju|'hoansi storytelling reflects a hunter-gatherer socio-ecological reality anchored in radical egalitarianism, shared communal access to resources ($zo$ honey, hunted meat, waterholes), intricate kinship obligations ($!ga$ grandmother, $!o$ uncle, $!xo$ age-mate), and spatial binary oppositions between the socialized human \textbf{Camp} and the wild, supernatural \textbf{Bush} inhabited by ancestral spirits ($g//awasi$).
+Formalist narrative modeling stems from Vladimir Propp's \textit{Morphology of the Folktale} (1928) \cite{propp1928morphology}. Propp defined 31 narrative functions structured around a hero's quest ending in matrimony or material gain ($W^*$). Proppian formalism misrepresents Ju|'hoansi oral epistemologies. Ju|'hoansi storytelling reflects hunter-gatherer socio-ecological organization: radical egalitarianism, shared communal resources ($zo$ honey, meat, waterholes), kinship obligations ($!ga$ grandmother, $!o$ uncle, $!xo$ age-mate), and spatial oppositions between the socialized human \textbf{Camp} and the supernatural \textbf{Bush} inhabited by ancestral spirits ($g//awasi$).
 
-To bridge computational narrative modeling with indigenous oral traditions, we introduce the \textbf{Ju|'hoansi Narrative Agentic Generator (\texttt{jnang})}. Engineered as an end-to-end framework, \texttt{jnang} combines semantic web ontologies (RDF/OWL), graph database context retrieval (Neo4j), and a 3-agent orchestration pipeline implemented in LangGraph.
+We introduce the \textbf{Ju|'hoansi Narrative Agentic Generator (\texttt{jnang})}, an end-to-end framework combining semantic web ontologies (RDF/OWL), graph context retrieval (Neo4j), and a 3-agent orchestration pipeline in LangGraph.
 
-The key contributions of this paper are summarized as follows:
+Contributions:
 \begin{enumerate}
-    \item \textbf{Indigenous Narrative Ontology}: We construct a formal RDF Turtle narrative ontology (\texttt{folktales\_ontology.ttl}) mapping Alan Dundes' 8 canonical motifemes \cite{dundes1964morphology}, Proppian functional moves, and Lévi-Straussian spatial axes (Camp vs. Bush) tailored to Ju|'hoansi socio-ecological dynamics.
-    \item \textbf{Graph-Grounded Multi-Agent Pipeline}: We deploy a 3-agent LangGraph workflow comprising a \textit{Generator Agent} (contextualized via Cypher queries over a Neo4j Knowledge Graph), a \textit{Classifier Agent} (extracting structural motifemes), and an \textit{Evaluator Agent} (grading cultural authenticity and enforcing non-hoarding rules).
-    \item \textbf{Machine Translation & Adaptation Framework}: We formalize a Pre-Translation Oicotype Adaptation mechanism enabling standard MT architectures to perform cultural and structural alignment before target token generation in low-resource African languages.
-    \item \textbf{Empirical Evaluation}: We evaluate generated narratives against human-curated Ju|'hoansi folktales, demonstrating superior cultural authenticity, structural brevity, and zero-tolerance mitigation of Eurocentric narrative drift.
+    \item \textbf{Indigenous Narrative Ontology}: A formal RDF Turtle narrative ontology (\texttt{folktales\_ontology.ttl}) mapping Alan Dundes' 8 canonical motifemes \cite{dundes1964morphology}, Proppian moves, and Lévi-Straussian spatial axes (Camp vs. Bush) to Ju|'hoansi socio-ecological dynamics.
+    \item \textbf{Graph-Grounded Multi-Agent Pipeline}: A 3-agent LangGraph workflow comprising a \textit{Generator Agent} (contextualized via Cypher queries over a Neo4j Knowledge Graph), a \textit{Classifier Agent} (extracting structural motifemes), and an \textit{Evaluator Agent} (grading cultural authenticity and enforcing non-hoarding rules).
+    \item \textbf{Machine Translation & Adaptation Framework}: A Pre-Translation Oicotype Adaptation mechanism enabling standard MT architectures to perform cultural and structural alignment before target token generation in low-resource African languages.
+    \item \textbf{Empirical Evaluation}: Quantitative benchmarking against human-curated Ju|'hoansi folktales, showing cultural authenticity, structural brevity, and elimination of Eurocentric tropes.
 \end{enumerate}
 
 \section{Related Work}\label{sec:related}
 
 \subsection{Computational Folkloristics & Story Generation}
-Automated Story Generation (ASG) has evolved from early rule-based planners (e.g., TALESPIN, FABULIST) to modern transformer-based neural generators. In computational folkloristics, researchers have digitized and parsed folk narrative structures using Proppian formalisms and the Aarne-Thompson-Uther (ATU) classification system \cite{propp1928morphology}. However, existing ASG benchmarks overwhelmingly reflect Western narrative arcs. Recent studies highlight that while modern LLMs excel at fluent prose, they fail to maintain structural constraints without external symbolic guidance.
+Automated Story Generation (ASG) evolved from rule-based planners (e.g., TALESPIN, FABULIST) to transformer-based neural generators. Computational folklorists digitized and parsed folk narrative structures using Proppian formalisms and the Aarne-Thompson-Uther (ATU) classification system \cite{propp1928morphology}. Existing ASG benchmarks reflect Western narrative arcs. Modern LLMs produce fluent prose but require explicit symbolic guidance to maintain structural constraints.
 
 \subsection{African NLP & Indigenous Knowledge Preservation}
-African languages are severely under-represented in NLP research due to data scarcity and lack of digital infrastructure. The Ju|'hoansi language (a Southern African Khoisan language famous for its complex click consonant phonology: $!$, $/$, $\neq$, $//$) possesses rich oral narratives that remain largely unrepresented in computational language resources. Research by Winschiers-Theophilus et al. emphasizes the necessity of participatory co-design and cultural alignment when introducing digital technologies to indigenous communities.
+African languages remain under-represented in NLP research because of data scarcity and missing digital infrastructure. The Ju|'hoansi language (a Southern African Khoisan language with click consonants: $!$, $/$, $\neq$, $//$) contains oral narratives lacking computational language resources. Winschiers-Theophilus et al. show that introducing digital technologies to indigenous communities requires participatory co-design and cultural alignment.
 
-\subsection{Formalist Paradigms: Propp vs. Dundes vs. Lévi-Strauss}
-While Propp proposed 31 sequential functions for Russian fairy tales, folklorist Alan Dundes \cite{dundes1964morphology} observed that Native American and African oral traditions utilize leaner structural units termed \textit{motifemes}. Dundes established that nuclear structures such as $\text{Lack} \rightarrow \text{Lack Liquidated}$ or $\text{Interdiction} \rightarrow \text{Violation} \rightarrow \text{Consequence}$ form complete, culturally valid narratives. Furthermore, Claude Lévi-Strauss demonstrated that structural meaning in myth arises from paradigmatic binary oppositions—in Ju|'hoansi folklore, the fundamental opposition between the human \textbf{Camp} (social harmony, sharing) and the supernatural \textbf{Bush} (danger, metamorphosis).
+\subsection{Formalist Paradigms: Propp, Dundes, and Lévi-Strauss}
+Propp proposed 31 sequential functions for Russian fairy tales. Folklorist Alan Dundes \cite{dundes1964morphology} showed that Native American and African oral traditions use concise structural units termed \textit{motifemes}. Dundes demonstrated that nuclear structures such as $\text{Lack} \rightarrow \text{Lack Liquidated}$ or $\text{Interdiction} \rightarrow \text{Violation} \rightarrow \text{Consequence}$ form complete, valid narratives. Claude Lévi-Strauss showed that mythic structure stems from paradigmatic binary oppositions. In Ju|'hoansi folklore, the core opposition separates the human \textbf{Camp} (social harmony, sharing) from the supernatural \textbf{Bush} (transformation, danger).
 
 \section{Cultural & Theoretical Foundations}\label{sec:theory}
 
-Ju|'hoansi oral tradition operates under four foundational cultural mechanics:
+Ju|'hoansi oral tradition relies on four cultural mechanics:
 
 \begin{table}[h]
-\caption{Comparative analysis of Western formalist tropes versus Ju|'hoansi oral epistemologies.}\label{tab:comparison}
+\caption{Western formalist tropes compared to Ju|'hoansi oral epistemologies.}\label{tab:comparison}
 \begin{tabular}{@{}lll@{}}
 \toprule
 Dimension & Western Formalism (Propp) & Ju|'hoansi Formalism (\texttt{jnang}) \\
 \midrule
-Role Model & Static (Hero, Villain, Donor) & Fluid / Porous (Trickster = Troublemaker + Helper) \\
+Role Model & Static (Hero, Villain, Donor) & Fluid (Trickster = Troublemaker + Helper) \\
 Primary Reward ($W^*$) & Monarchy, Gold, Marriage & Communal Food Sharing ($zo$ honey, meat, water) \\
 Spatial Dynamic & Linear Quest Arc & Spatial Axis (Camp $\leftrightarrow$ Bush Transformation) \\
 Structural Length & Long (31 functions) & Compact Motifemes (3--6 Dundes units) \\
@@ -102,10 +102,10 @@ Ecological Oicotypes & Magic Sword, Castle, Crown & Gemsbok Horn, Digging Stick,
 \end{table}
 
 \subsection{Dundes' 8 Canonical Motifemes}
-\texttt{jnang} enforces Alan Dundes' 8 nuclear motifemes tailored for Ju|'hoansi narratives:
+\texttt{jnang} enforces Alan Dundes' 8 nuclear motifemes configured for Ju|'hoansi narratives:
 \begin{enumerate}
     \item \textbf{Lack}: Scarcity of honey ($zo$), water, or meat.
-    \item \textbf{Interdiction}: A taboo voiced by an elder ($!ga$ or $!o$).
+    \item \textbf{Interdiction}: A taboo stated by an elder ($!ga$ or $!o$).
     \item \textbf{Violation}: Breaking of the interdiction by a character.
     \item \textbf{Consequence}: Ecological transformation or spiritual encounter.
     \item \textbf{Mediation}: Intervention by an ancestral spirit ($g//awasi$) or animal helper.
@@ -116,7 +116,7 @@ Ecological Oicotypes & Magic Sword, Castle, Crown & Gemsbok Horn, Digging Stick,
 
 \section{System Architecture}\label{sec:architecture}
 
-The \texttt{jnang} architecture consists of three integrated layers: the Semantic Ontology Layer, the Knowledge Graph Context Builder, and the LangGraph Multi-Agent Pipeline.
+The \texttt{jnang} architecture links three layers: the Semantic Ontology Layer, the Knowledge Graph Context Builder, and the LangGraph Multi-Agent Pipeline.
 
 \subsection{RDF Narrative Ontology & Neo4j Knowledge Graph}
 We defined an RDF Turtle schema (\texttt{folktales\_ontology.ttl}) using OWL classes:
@@ -127,10 +127,10 @@ propp:MagicalAgent rdfs:subClassOf propp:Object .
 propp:ProppianRole a owl:Class .
 \end{lstlisting}
 
-The RDF triples are ingested into Neo4j via \texttt{import\_rdf.py}, creating graph relationships (\texttt{:PERFORMS\_FUNCTION}, \texttt{:HAS\_ROLE}, \texttt{:LACKS}, \texttt{:FOLLOWS}). At runtime, \texttt{context\_builder.py} executes Cypher queries matching the user's narrative theme to pull deterministic subgraphs into the Generator Agent's context window.
+\texttt{import\_rdf.py} ingests RDF triples into Neo4j, creating graph relationships (\texttt{:PERFORMS\_FUNCTION}, \texttt{:HAS\_ROLE}, \texttt{:LACKS}, \texttt{:FOLLOWS}). At runtime, \texttt{context\_builder.py} executes Cypher queries matching the narrative theme to load subgraphs into the Generator Agent's context window.
 
 \subsection{LangGraph Multi-Agent Execution Pipeline}
-The multi-agent pipeline comprises three distinct nodes executed sequentially:
+The multi-agent pipeline executes three nodes sequentially:
 
 \begin{enumerate}
     \item \textbf{Agent 1 (Generator)}: Receives Neo4j subgraphs, RAG folktale excerpts, and vocabulary constraints from \texttt{ju\_dictionary.xls}. Synthesizes a structured narrative adhering to spatial dynamics (Camp $\leftrightarrow$ Bush) and Dundes motifemes.
@@ -139,17 +139,17 @@ The multi-agent pipeline comprises three distinct nodes executed sequentially:
     \begin{equation}
         \text{Score}_{\text{Cultural}} = \frac{\text{Egalitarianism} + \text{FoodSharing} + \text{Kinship}}{3}
     \end{equation}
-    \textit{Critical Penalty}: If an unpunished resource hoarding move is detected, $\text{Score}_{\text{Cultural}}$ drops immediately to $0$.
+    \textit{Critical Penalty}: If an unpunished resource hoarding move appears, $\text{Score}_{\text{Cultural}}$ drops to $0$.
 \end{enumerate}
 
 \section{Machine Translation & Cultural Adaptation Framework}\label{sec:mt}
 
-Standard MT models suffer from cultural semantic erosion when translating Western stories into indigenous languages. \texttt{jnang} provides a pre-translation adaptation layer:
+Standard MT models lose cultural semantics when translating Western stories into indigenous languages. \texttt{jnang} provides a pre-translation adaptation layer:
 
 \begin{enumerate}
-    \item \textbf{Pre-Translation Oicotype Substitution}: Source narrative elements are parsed into motifemes and mapped to local Ju|'hoansi oicotypes (e.g., replacing "king's decree" with "elder campfire taboo").
-    \item \textbf{Ontology-Constrained Decoding}: Graph relationships hard-constrain vocabulary generation to ensure proper Khoisan click orthography ($!$, $/$, $\neq$, $//$) and exact kinship terms.
-    \item \textbf{Automated Cultural Quality Estimation}: The Grader Agent serves as a quality filter, rejecting translated outputs that violate communal sharing rules.
+    \item \textbf{Pre-Translation Oicotype Substitution}: Maps source narrative elements to local Ju|'hoansi oicotypes (for example, replacing a king's decree with an elder's campfire taboo).
+    \item \textbf{Ontology-Constrained Decoding}: Hard-constrains vocabulary generation through graph relationships to enforce Khoisan click orthography ($!$, $/$, $\neq$, $//$) and exact kinship terms.
+    \item \textbf{Automated Cultural Quality Estimation}: Uses the Grader Agent as a quality filter, rejecting translated outputs that violate communal sharing rules.
 \end{enumerate}
 
 \section{Results & Evaluation}\label{sec:results}
@@ -157,7 +157,7 @@ Standard MT models suffer from cultural semantic erosion when translating Wester
 We evaluated \texttt{jnang} across 50 generated narratives against an unconstrained baseline LLM (\texttt{gpt-4o-mini} without symbolic grounding). 
 
 \begin{table}[h]
-\caption{Evaluation results comparing baseline LLM narrative generation with \texttt{jnang}.}\label{tab:results}
+\caption{Baseline LLM narrative generation compared to the \texttt{jnang} framework.}\label{tab:results}
 \begin{tabular}{@{}lll@{}}
 \toprule
 Evaluation Metric & Baseline LLM & \texttt{jnang} Framework \\
@@ -171,11 +171,11 @@ Click Consonant Orthographic Precision & 44\% & \textbf{97\%} \\
 \end{tabular}
 \end{table}
 
-As shown in Table~\ref{tab:results}, \texttt{jnang} achieves near-perfect adherence to cultural authenticity guidelines while completely eliminating Eurocentric narrative drift.
+Table~\ref{tab:results} shows that \texttt{jnang} adheres to cultural authenticity guidelines while eliminating Eurocentric narrative tropes.
 
 \section{Discussion & Conclusion}\label{sec:conclusion}
 
-In this paper, we introduced \texttt{jnang}, an ontologically grounded agentic framework for generating and adapting indigenous Ju|'hoansi oral narratives. By replacing rigid Eurocentric formalisms with Dundes motifemes, Lévi-Straussian spatial axes, RDF knowledge graphs, and multi-agent grading, \texttt{jnang} successfully bridges computational story generation with indigenous knowledge preservation. Future work includes expanding participatory community evaluations in Namibia and extending the framework to related Khoisan and Bantu oral traditions.
+\texttt{jnang} grounds agentic narrative generation and adaptation in indigenous Ju|'hoansi oral traditions. Replacing Eurocentric formalisms with Dundes motifemes, Lévi-Straussian spatial axes, RDF knowledge graphs, and multi-agent grading connects computational story generation with indigenous knowledge preservation. Ongoing work includes expanding community evaluations in Namibia and extending the framework to related Khoisan and Bantu oral traditions.
 
 \section*{Declarations}
 \begin{itemize}
