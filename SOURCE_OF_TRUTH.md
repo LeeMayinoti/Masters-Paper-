@@ -80,8 +80,8 @@ We explicitly reserve space for additional key references to elevate academic ri
 
 - [x] **Phase 1**: Source of Truth Alignment & Architectural Decisions Confirmed via Interview
 - [x] **Phase 2**: Proposal Problem Statement, Objectives & Bibliography Strategy Integrated
-- [ ] **Phase 3**: Introduction & Background Drafting (Page 1)
-- [ ] **Phase 4**: Literature Review / Related Work (Biesele, Propp/Dundes, Finlayson) (Page 2)
+- [x] **Phase 3**: Introduction & Background Drafting (Page 1)
+- [x] **Phase 4**: Literature Review / Related Work (Biesele, Propp/Dundes, Finlayson) (Page 2)
 - [ ] **Phase 5**: Methods - Story Collection, Decomposition & Ontology (Pages 3–4)
 - [ ] **Phase 6**: Methods - Agent Architecture & Workflow Diagrams (Pages 5–6)
 - [ ] **Phase 7**: Visuals, Diagrams & Sample Narrative Abstract (Pages 7–8)
