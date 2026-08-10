@@ -1,6 +1,6 @@
 % Version 3.1 December 2024
 % Springer Nature LaTeX Template for Masters-Paper-
-\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style
 
 \usepackage[T1]{fontenc}%
 \usepackage{graphicx}%
@@ -52,7 +52,7 @@
 %% Abstract                         %%
 %%==================================%%
 
-\abstract{Automated Story Generation (ASG) systems rely on Indo-European formalist paradigms, such as Vladimir Propp's 31-function quest model. Applied to indigenous African oral traditions, including the \juhoansi{} San of the Kalahari, these formalisms fail. They assume static character archetypes, linear progression toward individual wealth or monarchy ($W^*$), and punitive execution of antagonists. \juhoansi{} narratives are compact, episodic, and symmetrical. Radical egalitarianism, communal resource sharing ($zo$ honey, meat, water), complex kinship networks, and spatial oppositions between the human Camp and the supernatural Bush govern these stories. We introduce the \textbf{\juhoansi{} Narrative Agentic Generator (\texttt{jnang})}, an ontologically grounded multi-agent architecture that preserves, generates, evaluates, and adapts culturally authentic folktales. The system connects an RDF Turtle narrative ontology (\texttt{folktales\_ontology.ttl}) and a Neo4j Knowledge Graph to a 3-agent LangGraph pipeline. The pipeline includes a \textit{Generator Agent} (constrained by Alan Dundes' 8 motifemes and spatial tracking), a \textit{Classifier Agent} (extracting structural motifemes and Proppian moves), and an \textit{Evaluator Agent} (scoring cultural authenticity and penalizing unpunished resource hoarding). \texttt{jnang} also provides structural and cultural adaptation for Machine Translation (MT) systems in under-resourced indigenous African languages. In evaluations, \texttt{jnang} achieved 100\% adherence to egalitarian non-hoarding constraints and high structural fidelity without Eurocentric tropes.}
+\abstract{Automated Story Generation (ASG) systems rely on Indo-European formalist paradigms, such as Vladimir Propp's 31-function quest model. Applied to indigenous African oral traditions, including the \juhoansi{} San of the Kalahari, these formalisms fail. They assume static character archetypes, linear progression toward individual wealth or monarchy ($W^*$), and punitive execution of antagonists. \juhoansi{} narratives are compact, episodic, and symmetrical. Radical egalitarianism, communal resource sharing ($zo$ honey, meat, water), complex kinship networks, and spatial oppositions between the human Camp and the supernatural Bush govern these stories. We introduce the \textbf{\juhoansi{} Narrative Agentic Generator (\texttt{jnang})}, an ontologically grounded multi-agent architecture that preserves, generates, evaluates, and adapts culturally authentic folktales. The system connects an RDF Turtle narrative ontology (\texttt{folktales\_ontology.ttl}) and a Neo4j Knowledge Graph to a 3-agent LangGraph pipeline. The pipeline includes a \textit{Generator Agent} (constrained by Alan Dundes' 8 motifemes and spatial tracking), a \textit{Classifier Agent} (extracting structural motifemes and Proppian moves), and an \textit{Evaluator Agent} (scoring cultural authenticity and penalizing unpunished resource hoarding). \texttt{jnang} also provides structural and cultural adaptation for Machine Translation (MT) systems in under-resourced indigenous African languages. In a pilot evaluation ($N=16$) against a naive baseline, \texttt{jnang} scored higher on cultural authenticity under blind independent judging in every theme tested, with zero European-trope leakage versus 25\% in the baseline.}
 
 \keywords{Computational Folkloristics, Indigenous Knowledge Preservation, Large Language Models, Multi-Agent Systems, Knowledge Graphs, \juhoansi{}, Narrative Generation, Machine Translation}
 
@@ -239,28 +239,47 @@ Standard MT models lose cultural semantics when translating Western stories into
 
 \section{Results & Evaluation}\label{sec:results}
 
-We evaluated \texttt{jnang} across 50 generated narratives against an unconstrained baseline LLM (\texttt{gpt-4o-mini} without symbolic grounding). 
+We benchmarked \texttt{jnang} against a naive baseline --- the same \texttt{gpt-4o-mini} model prompted for a \juhoansi{} folktale with no ontology, knowledge graph, RAG, or dictionary grounding --- across 8 pre-registered themes: the 5 preset narrative themes (sharing honey, the Moon's immortality message, a trickster hiding a waterhole, the origin of fire, and the Elephant holding back water) and 3 held-out stories from the source corpus (Ostrich and the Tortoise, Springhare Dances, Ducks and People) absent from both the RDF ontology and the RAG pool, testing generalization rather than memorization. Each of the resulting 16 narratives (one per theme per arm; $N=16$, no repeats --- a pilot-scale, indicative comparison rather than a powered study) was scored twice: once by the pipeline's own in-pipeline grader (\texttt{gpt-4o-mini}, the same model family as the Generator, given the Classifier's motifeme analysis as context) and once by an independent, blind judge (Gemini 2.5 Flash, given only the raw story text, with no knowledge of which arm produced it or any prior structural analysis). Two deterministic, non-LLM checks supplement both graders: a European-trope keyword scanner and a click-consonant vocabulary verifier cross-checked against the reference lexicon (\texttt{ju\_dictionary.xls}).
 
 \begin{table}[h]
-\caption{Baseline LLM narrative generation compared to the \texttt{jnang} framework.}\label{tab:results}
-\begin{tabular}{@{}lll@{}}
+\caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-Evaluation Metric & Baseline LLM & \texttt{jnang} Framework \\
+ & \multicolumn{2}{c}{In-Pipeline Grader} & \multicolumn{2}{c}{Independent Judge} \\
+Metric & Baseline & \texttt{jnang} & Baseline & \texttt{jnang} \\
 \midrule
-Cultural Authenticity Score (0--10) & 4.2 / 10 & \textbf{9.6 / 10} \\
-Zero Hoarding Violation Rate & 58\% & \textbf{100\%} \\
-Motifeme Chain Coherence & 52\% & \textbf{94\%} \\
-Authentic Oicotype Usage & 31\% & \textbf{98\%} \\
-Click Consonant Orthographic Precision & 44\% & \textbf{97\%} \\
+Cultural Authenticity (0--10) & 4.83 & \textbf{7.42} & 2.15 & \textbf{6.36} \\
+Motifeme Coverage (0--10) & 9.00 & \textbf{9.38} & 9.00 & \textbf{9.44} \\
+No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:results} shows that \texttt{jnang} adheres to cultural authenticity guidelines while eliminating Eurocentric narrative tropes.
+\begin{table}[h]
+\caption{Deterministic (non-LLM) checks, all 8 themes.}\label{tab:deterministic}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Metric & Baseline & \texttt{jnang} \\
+\midrule
+European-Trope-Free Rate & 75\% & \textbf{100\%} \\
+Click-Consonant Term Verification Rate & n/a (0 glossed terms) & 36\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\texttt{jnang} out-scored the naive baseline on cultural authenticity under the independent judge in every one of the 8 themes tested (binomial sign test, $p \approx 0.004$), and the deterministic trope scanner independently confirms the direction: the naive baseline leaked literal European vocabulary (``king,'' ``gold'') in 2 of 8 stories, while \texttt{jnang} produced zero trope hits across all 8.
+
+\textbf{Self-grading bias.} The two graders disagree substantially: mean cultural-authenticity scores differ by 1.87 points on average (in-pipeline higher in 13 of 16 rows), and the graders' \texttt{overall\_grade} labels match exactly in only 5 of 16 rows (31\%; Pearson $r=0.76$ on raw cultural-authenticity scores). The disagreement is asymmetric in a revealing way: the in-pipeline grader --- sharing the Generator's model family --- rates the \emph{baseline} arm far more leniently than the independent judge does (4.83 vs.\ 2.15), while its \texttt{jnang}-arm scores stay close to the independent judge's (7.42 vs.\ 6.36). The No Unpunished Hoarding Rate makes this concrete: the in-pipeline grader reports an identical 62\% for both arms, effectively blind to the difference our own rubric is designed to detect, while the independent judge separates them sharply (38\% vs.\ 88\%). This is direct evidence that grading a system with a same-family, non-blind judge risks inflating exactly the baseline it should be compared against, motivating the independent-judge design used here.
+
+\textbf{Generalization.} \texttt{jnang} also outperformed the baseline on all 3 held-out themes under the independent judge, though by a smaller margin than on the 5 presets (cultural authenticity: preset baseline 2.37 $\rightarrow$ \texttt{jnang} 7.81; held-out baseline 1.78 $\rightarrow$ \texttt{jnang} 3.96). The system's advantage is not confined to its 4 ontology-formalized stories, but it is weaker where RAG grounding is necessarily indirect.
+
+\textbf{Orthographic precision is a genuine limitation, not a strength.} Only 36\% of \texttt{jnang}'s click-consonant vocabulary glosses verified against the reference lexicon (the baseline produced no glossed terms to check at all). Tracing the unverified terms to their source shows two concrete causes: the Generator's own hardcoded kinship vocabulary (e.g.\ \texttt{!ga} for grandmother, \texttt{!o} for uncle) does not match the headwords actually present in \texttt{ju\_dictionary.xls}, and for concepts outside its fixed 20-row vocabulary sample (e.g.\ tortoise, ostrich) the Generator invents plausible-sounding but unverified click-consonant terms rather than retrieving real ones. Both are addressable --- validating hardcoded prompt vocabulary against the reference lexicon, and expanding or theme-matching the vocabulary sample --- but the current figure should not be read as evidence of orthographic fidelity.
 
 \section{Discussion & Conclusion}\label{sec:conclusion}
 
-\texttt{jnang} grounds agentic narrative generation and adaptation in indigenous \juhoansi{} oral traditions. Replacing Eurocentric formalisms with Dundes motifemes, Lévi-Straussian spatial axes, RDF knowledge graphs, and multi-agent grading connects computational story generation with indigenous knowledge preservation. Ongoing work includes expanding community evaluations in Namibia and extending the framework to related Khoisan and Bantu oral traditions.
+\texttt{jnang} grounds agentic narrative generation and adaptation in indigenous \juhoansi{} oral traditions. Replacing Eurocentric formalisms with Dundes motifemes, Lévi-Straussian spatial axes, RDF knowledge graphs, and multi-agent grading connects computational story generation with indigenous knowledge preservation.
+
+\textbf{Limitations.} Our evaluation is pilot-scale: $N=16$ narratives with no repeats per cell, so the results in Section~\ref{sec:results} are directionally consistent (8 of 8 themes favor \texttt{jnang} under blind judging) rather than statistically powered. LLM-based grading itself carries real reliability limits --- our two graders agreed on an overall grade label only 31\% of the time --- and even our independent judge is still an LLM, not a \juhoansi{} cultural authority; no human or community evaluation was conducted. The RDF ontology and RAG pool currently formalize only 4 of the 14 stories in the source corpus, and orthographic precision (Section~\ref{sec:results}) shows the Generator's hardcoded vocabulary is not fully validated against the reference lexicon. Ongoing work includes expanding community evaluations in Namibia, incorporating \juhoansi{} speakers as graders, formalizing the remaining source stories, and extending the framework to related Khoisan and Bantu oral traditions.
 
 \section*{Declarations}
 \begin{itemize}
