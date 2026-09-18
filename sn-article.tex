@@ -358,7 +358,7 @@ arr/.style={-{Latex[length=2.2mm]}, thick}
 \end{figure}
 
 \begin{enumerate}
-\item \textbf{Generator Agent}: Receives Neo4j subgraphs, RAG folktale excerpts, and vocabulary constraints from \texttt{ju\_dictionary.xls}. It generates narratives guided by Camp/Bush spatial dynamics and Dundes motifemes (Appendix~\ref{app:sample}).
+\item \textbf{Generator Agent}: Receives Neo4j subgraphs, RAG folktale excerpts, and vocabulary constraints from \texttt{ju\_dictionary.xls}. It generates narratives guided by Camp/Bush spatial dynamics and Dundes motifemes (see Section~\ref{sec:results}).
 
 \item \textbf{Classifier Agent}: Uses structured output through \texttt{ClassificationOutput} to identify Dundes motifemes and narrative-function moves present in the generated story (see figure \ref{fig:pipeline}).
 
@@ -414,22 +414,36 @@ No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
-\caption{Deterministic (non-LLM) checks, all 8 themes.}\label{tab:deterministic}
-\begin{tabular}{@{}lcc@{}}
-\toprule
-Metric & Baseline & \texttt{jnang} \\
-\midrule
-European-Trope-Free Rate & 75\% & \textbf{100\%} \\
-Click-Consonant Term Verification Rate & n/a (0 glossed terms) & 36\% \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 
 \noindent \textbf{Cultural authenticity.}
 
 \noindent  Under the independent judge, \texttt{jnang} scored higher than the baseline on cultural authenticity in all 8 themes ($k = 8$ of $n = 8$ positive differences). A one-sided sign test yields $p = 0.5^{8} \approx 0.004$, rejecting the null hypothesis of equal performance. Because the test relies on sign counts rather than score magnitudes, it is sensitive to even a single reversal: if one theme flipped direction, $k = 7$ of $n = 8$ would give $p \approx 0.035$, still below $\alpha = 0.05$ but substantially weaker. The deterministic trope scanner provides independent, non-LLM support for this result: the baseline produced European terms such as ``king'' and ``gold'' in 2 of 8 stories, while \texttt{jnang} produced none.
+
+\medskip
+
+\noindent \textbf{Sample output.}
+
+\noindent The following excerpt is from the \texttt{jnang} narrative for the trickster and
+waterhole theme:
+
+\begin{quote}
+\small
+``The elders, including his wise grandmother, $!ga$, gathered around the campfire each evening
+\ldots{} But Tjua, instead of sharing this precious secret with the thirsty community, decided to
+keep it all for himself. \ldots{} Just as he leaned down to drink, the water began to swirl and
+shimmer, transforming into a great $g//awasi$ spirit \ldots{} \emph{You have kept the life of the
+community from them! You must return what you have stolen!} \ldots{} He led them to the hidden
+waterhole \ldots{} and as they drank, they laughed and danced, sharing the life-giving water.''
+\end{quote}
+
+\noindent The Classifier labelled this chain Lack $\rightarrow$ Interdiction $\rightarrow$
+Violation $\rightarrow$ Consequence $\rightarrow$ Mediation $\rightarrow$ Lack Liquidated, and the
+independent judge recovered the same positions from the text alone. The excerpt also exposes a
+recurring flaw: in 4 of the 8 \texttt{jnang} narratives the Generator names motifeme labels in the
+prose rather than only enacting them, an artefact of the structural prompt that a production
+version would need to suppress.
 
 \medskip
 
@@ -468,8 +482,6 @@ Theme Subset & Baseline & \texttt{jnang} & $\Delta$ \\
 \quad Springhare Dances & 0.33 & 1.67 & +1.34 \\
 \quad Ducks and People & 4.00 & 6.20 & +2.20 \\
 \quad \textit{Held-out mean} & \textit{1.78} & \textit{3.96} & \textit{+2.18} \\
-\midrule
-\textbf{All 8 themes} & \textbf{2.15} & \textbf{6.36} & \textbf{+4.21} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -504,65 +516,7 @@ Future work will expand the knowledge graph to the remaining corpus stories, con
 % \item \textbf{Data Availability}: All ontology triples (\texttt{.ttl}), Neo4j import scripts, and agent code are available in the project repository.
 % \end{itemize}
 
-\begin{comment}
-\begin{appendices}
 
-\section{Sample Generated Narrative and Classifier Output}\label{app:sample}
-
-The narrative below is the unedited \texttt{jnang} output for the trickster and waterhole
-theme, one of the 8 themes in the evaluation reported in Section~\ref{sec:results}. It is
-followed by the Classifier Agent's structural analysis of that text and the two graders' scores,
-so that output quality can be judged directly rather than through a summary score.
-
-\subsection*{Generated narrative}
-
-In the vast and shimmering Kalahari, where the red sand dunes dance under the sun's gaze, there lived a clever springhare named Tjua. Tjua was known for his quick legs and even quicker mind, but he was also known to be a trickster. One day, while hopping through the bush, Tjua stumbled upon a hidden waterhole, its waters sparkling like stars at night.
-
-Lack (of water) soon became the theme of Tjua's thoughts, for the community was suffering from thirst. The elders, including his wise grandmother, !ga, gathered around the campfire each evening, sharing stories of the past and worrying about the dwindling water supplies. But Tjua, instead of sharing this precious secret with the thirsty community, decided to keep it all for himself.
-
-Interdiction came when the spirits of the bush whispered to Tjua, warning him that hoarding water would bring dire consequences. ``Tjua, do not hide this waterhole,'' they said in voices like rustling leaves. But Tjua, thinking of himself, ignored the spirits' words and continued to visit the waterhole in secret, drinking deeply while the others parched under the sun.
-
-As days passed, the community grew weaker. The children, led by Tjua's age-mate, !xo, began to search tirelessly for water. They asked Tjua, ``Have you seen any water, dear friend?'' Tjua merely smiled, hiding the truth behind his twitching whiskers. This violation of trust would not go unnoticed.
-
-The consequence came one evening when the sun dipped low, painting the sky with hues of orange and purple. Tjua, feeling bold, decided to drink from the waterhole one last time before sharing the secret. As he approached, he noticed the ground trembling slightly. This was no ordinary waterhole; it was a sacred place, and the spirits were angered by his selfishness.
-
-Just as he leaned down to drink, the water began to swirl and shimmer, transforming into a great g//awasi spirit, glowing and formidable. ``Tjua, you have kept the life of the community from them! You must return what you have stolen!'' the spirit bellowed, its voice echoing across the dunes.
-
-Mediation came when Tjua, trembling with fear, realized the depth of his violation. He remembered the laughter of the children, the tired faces of the elders, and the parched earth that surrounded him. With a heavy heart, he agreed to share the secret waterhole. He dashed back through the bush, calling out to the community, ``Come! I have found water!''
-
-Upon reaching the camp, Tjua found everyone gathered, their eyes wide with hope. He led them to the hidden waterhole, where the water sparkled again under the moonlight. The community rejoiced, filling their buckets, and as they drank, they laughed and danced, sharing the life-giving water.
-
-Through this act of restoration, Tjua learned the value of community over individual gain. The spirits of the bush smiled upon them, and from that day forward, Tjua became known not just as a trickster, but as a provider who had learned to share. And so, the community flourished, united by the precious water and the bonds of kinship that tied them together.
-
-From that day, every time they gathered around the campfire, they would tell the story of Tjua and the hidden waterhole, a reminder that sharing brings life and joy to all.
-
-\subsection*{Classifier Agent output}
-
-\noindent \textbf{Motifemes identified}: Lack, Interdiction, Violation, Consequence, Mediation, Lack Liquidated.
-
-\medskip
-
-\noindent \textbf{Narrative moves}:
-\begin{enumerate}
-    \item Tjua discovers hidden waterhole
-    \item Elders express concern over water shortage
-    \item Spirits warn Tjua against hoarding water
-    \item Tjua ignores spirits and drinks from waterhole
-    \item Community searches for water
-    \item G//awasi spirit confronts Tjua for his selfishness
-    \item Tjua agrees to share the waterhole with the community
-    \item Community rejoices as they drink from the waterhole
-\end{enumerate}
-
-\subsection*{Grader scores for this narrative}
-
-\noindent In-pipeline Grader: cultural authenticity 6.67,
-motifeme coverage 10.0, overall \textit{Fails}.
-Independent judge: cultural authenticity 8.0,
-motifeme coverage 10.0, overall \textit{Good}.
-
-\end{appendices}
-\end{comment}
 \begingroup
 \small
 \medskip
