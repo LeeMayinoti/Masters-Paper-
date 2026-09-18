@@ -272,18 +272,44 @@ The methodology followed a sequential process from source analysis to narrative 
 
 The \texttt{jnang} architecture consists of three main layers: the Semantic Ontology Layer, the Knowledge Graph Layer, and the LangGraph Multi-Agent Pipeline.
 
+% \begin{figure}[h]
+% \centering
+% \begin{tikzpicture}[
+% node distance=1.1cm,
+% layer/.style={rectangle, draw, rounded corners, minimum width=8cm, minimum height=1.1cm, align=center, fill=gray!8},
+% arr/.style={-{Latex[length=2.5mm]}, thick}
+% ]
+% \node[layer] (ont) {Semantic Ontology Layer\\\texttt{folktales\_ontology.ttl} (RDF/OWL)};
+% \node[layer, below=of ont] (kg) {Knowledge Graph Layer\\Neo4j + \texttt{context\_builder.py}};
+% \node[layer, below=of kg] (agents) {LangGraph Multi-Agent Pipeline\\Generator $\rightarrow$ Classifier $\rightarrow$ Grader};
+% \draw[arr] (ont) -- (kg) node[midway, right, font=\footnotesize] {\texttt{import\_rdf.py}};
+% \draw[arr] (kg) -- (agents) node[midway, right, font=\footnotesize] {Cypher subgraph retrieval};
+% \end{tikzpicture}
+% \caption{Three-layer \texttt{jnang} architecture. The RDF/OWL ontology is ingested into a Neo4j knowledge graph, which provides theme-matched subgraphs to the multi-agent pipeline during generation.}
+% \label{fig:architecture}
+% \end{figure}
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
-node distance=1.1cm,
-layer/.style={rectangle, draw, rounded corners, minimum width=8cm, minimum height=1.1cm, align=center, fill=gray!8},
-arr/.style={-{Latex[length=2.5mm]}, thick}
+node distance=0.75cm,
+layer/.style={
+    rectangle,
+    draw,
+    rounded corners,
+    minimum width=6.5cm,
+    minimum height=0.8cm,
+    align=center,
+    fill=gray!8,
+    font=\small
+},
+arr/.style={-{Latex[length=2mm]}, thick}
 ]
 \node[layer] (ont) {Semantic Ontology Layer\\\texttt{folktales\_ontology.ttl} (RDF/OWL)};
 \node[layer, below=of ont] (kg) {Knowledge Graph Layer\\Neo4j + \texttt{context\_builder.py}};
 \node[layer, below=of kg] (agents) {LangGraph Multi-Agent Pipeline\\Generator $\rightarrow$ Classifier $\rightarrow$ Grader};
-\draw[arr] (ont) -- (kg) node[midway, right, font=\footnotesize] {\texttt{import\_rdf.py}};
-\draw[arr] (kg) -- (agents) node[midway, right, font=\footnotesize] {Cypher subgraph retrieval};
+
+\draw[arr] (ont) -- (kg) node[midway, right, font=\scriptsize] {\texttt{import\_rdf.py}};
+\draw[arr] (kg) -- (agents) node[midway, right, font=\scriptsize] {Cypher subgraph retrieval};
 \end{tikzpicture}
 \caption{Three-layer \texttt{jnang} architecture. The RDF/OWL ontology is ingested into a Neo4j knowledge graph, which provides theme-matched subgraphs to the multi-agent pipeline during generation.}
 \label{fig:architecture}
@@ -321,7 +347,7 @@ The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating rel
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,trim=10 10 10 10,clip]{figures/kg-move-chain-story2.png}
+\includegraphics[width=0.8\textwidth,trim=10 10 10 10,clip]{figures/kg-move-chain-story2.png}
 \caption{Cypher query tracing the sequential motifeme and narrative-move chain for the \textit{Honey and the Flies} story. The retrieved structure provides an ordered sequence of actions, locations, characters, and objects rather than an unordered text excerpt.}
 \label{fig:kg-move-chain}
 \end{figure}
@@ -330,35 +356,124 @@ The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating rel
 
 The system uses three sequential agents. The Generator performs the main narrative generation, while the Classifier and Grader provide structural analysis and evaluation see figure \ref{fig:pipeline}.
 
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+% box/.style={rectangle, draw, rounded corners, minimum width=2.8cm, minimum height=0.8cm, align=center, fill=gray!8, font=\footnotesize},
+% term/.style={rectangle, draw, rounded corners, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\footnotesize},
+% dec/.style={diamond, draw, align=center, fill=gray!8, font=\footnotesize, inner sep=2pt},
+% arr/.style={-{Latex[length=2.2mm]}, thick}
+% ]
+% \node[term] (start) at (0,6.8) {start};
+% \node[dec] (router) at (0,4.8) {input\_story\\provided?};
+% \node[box] (echo) at (-2.6,3.2) {echo\_input\_story};
+% \node[box] (gen) at (2.6,3.2) {Agent 1: Generator};
+% \node[box] (cls) at (0,1.8) {Agent 2: Classifier};
+% \node[box] (grd) at (0,0.6) {Agent 3: Grader};
+% \node[term] (end) at (0,-0.6) {end};
+% \draw[arr] (start) -- (router);
+% \draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {yes} (echo);
+% \draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {no} (gen);
+% \draw[arr] (echo) |- (cls);
+% \draw[arr] (gen) |- (cls);
+% \draw[arr] (cls) -- (grd);
+% \draw[arr] (grd) -- (end);
+% \end{tikzpicture}
+% \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
+% \label{fig:pipeline}
+% \end{figure}
+
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+% box/.style={
+%     rectangle, draw, rounded corners,
+%     minimum width=2.8cm,
+%     minimum height=0.7cm,
+%     align=center,
+%     fill=gray!8,
+%     font=\footnotesize
+% },
+% term/.style={
+%     rectangle, draw, rounded corners,
+%     minimum width=1.8cm,
+%     minimum height=0.6cm,
+%     align=center,
+%     font=\footnotesize
+% },
+% dec/.style={
+%     diamond, draw,
+%     align=center,
+%     fill=gray!8,
+%     font=\footnotesize,
+%     inner sep=2pt
+% },
+% arr/.style={-{Latex[length=2mm]}, thick}
+% ]
+%
+% \node[term] (start) at (0,4.2) {start};
+% \node[dec] (router) at (0,3.2) {input\_story\\provided?};
+%
+% \node[box] (echo) at (-2.6,2.1) {echo\_input\_story};
+% \node[box] (gen) at (2.6,2.1) {Agent 1: Generator};
+%
+% \node[box] (cls) at (0,1.1) {Agent 2: Classifier};
+% \node[box] (grd) at (0,0.2) {Agent 3: Grader};
+% \node[term] (end) at (0,-0.7) {end};
+%
+% \draw[arr] (start) -- (router);
+%
+% \draw[arr] (router) -| 
+%     node[pos=0.3, above, font=\tiny] {yes} (echo);
+%
+% \draw[arr] (router) -| 
+%     node[pos=0.3, above, font=\tiny] {no} (gen);
+%
+% \draw[arr] (echo) |- (cls);
+% \draw[arr] (gen) |- (cls);
+%
+% \draw[arr] (cls) -- (grd);
+% \draw[arr] (grd) -- (end);
+%
+% \end{tikzpicture}
+% \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
+% \label{fig:pipeline}
+% \end{figure}
 \begin{figure}[H]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-box/.style={rectangle, draw, rounded corners, minimum width=2.8cm, minimum height=0.8cm, align=center, fill=gray!8, font=\footnotesize},
-term/.style={rectangle, draw, rounded corners, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\footnotesize},
-dec/.style={diamond, draw, align=center, fill=gray!8, font=\footnotesize, inner sep=2pt},
-arr/.style={-{Latex[length=2.2mm]}, thick}
+box/.style={rectangle, draw, rounded corners, minimum width=2.6cm,
+            minimum height=0.9cm, align=center, fill=gray!8, font=\footnotesize},
+term/.style={rectangle, draw, rounded corners, minimum width=1.4cm,
+             minimum height=0.9cm, align=center, font=\footnotesize},
+dec/.style={diamond, draw, aspect=2, align=center, fill=gray!8,
+            font=\scriptsize, inner sep=1pt},
+arr/.style={-{Latex[length=2mm]}, thick}
 ]
-\node[term] (start) at (0,6.8) {start};
-\node[dec] (router) at (0,4.8) {input\_story\\provided?};
-\node[box] (echo) at (-2.6,3.2) {echo\_input\_story};
-\node[box] (gen) at (2.6,3.2) {Agent 1: Generator};
-\node[box] (cls) at (0,1.8) {Agent 2: Classifier};
-\node[box] (grd) at (0,0.6) {Agent 3: Grader};
-\node[term] (end) at (0,-0.6) {end};
+\node[term] (start)  at (0,0)      {start};
+\node[dec]  (router) at (2.9,0)    {input\_story\\provided?};
+\node[box]  (echo)   at (6.6,1.3)  {echo\_input\_story};
+\node[box]  (gen)    at (6.6,-1.3) {Agent 1: Generator};
+\node[box]  (cls)    at (10.1,0)   {Agent 2: Classifier};
+\node[box]  (grd)    at (13.2,0)   {Agent 3: Grader};
+\node[term] (end)    at (15.4,0)   {end};
+
 \draw[arr] (start) -- (router);
-\draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {yes} (echo);
-\draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {no} (gen);
-\draw[arr] (echo) |- (cls);
-\draw[arr] (gen) |- (cls);
+\draw[arr] (router) |- node[pos=0.75, above, font=\tiny] {yes} (echo);
+\draw[arr] (router) |- node[pos=0.75, below, font=\tiny] {no} (gen);
+\draw[arr] (echo) -| (cls);
+\draw[arr] (gen)  -| (cls);
 \draw[arr] (cls) -- (grd);
 \draw[arr] (grd) -- (end);
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
 \label{fig:pipeline}
 \end{figure}
 
 \begin{enumerate}
-\item \textbf{Generator Agent}: Receives Neo4j subgraphs, RAG folktale excerpts, and vocabulary constraints from \texttt{ju\_dictionary.xls}. It generates narratives guided by Camp/Bush spatial dynamics and Dundes motifemes (Appendix~\ref{app:sample}).
+\item \textbf{Generator Agent}: Receives Neo4j subgraphs, RAG folktale excerpts, and vocabulary constraints from \texttt{ju\_dictionary.xls}. It generates narratives guided by Camp/Bush spatial dynamics and Dundes motifemes (see Section~\ref{sec:results}).
 
 \item \textbf{Classifier Agent}: Uses structured output through \texttt{ClassificationOutput} to identify Dundes motifemes and narrative-function moves present in the generated story (see figure \ref{fig:pipeline}).
 
@@ -399,6 +514,41 @@ arr/.style={-{Latex[length=2.2mm]}, thick}
 \section{Results \& Evaluation}\label{sec:results}
 
  The system was benchmarked \texttt{jnang} against a naive baseline,  the same \texttt{gpt-4o-mini} model prompted for a \juhoansi{} folktale with no ontology, knowledge graph, RAG, or dictionary grounding across 8 pre-registered themes: the 5 preset narrative themes (sharing honey, the Moon's immortality message, a trickster hiding a waterhole, the origin of fire, and the Elephant holding back water) and 3 held-out stories from the source corpus (Ostrich and the Tortoise, Springhare Dances, Ducks and People) absent from both the RDF ontology and the RAG pool, testing generalization rather than memorization. Each of the resulting 16 narratives (one per theme per arm; $N=16$, no repeats  a pilot-scale, indicative comparison rather than a powered study) was scored twice: once by the pipeline's own in-pipeline grader (\texttt{gpt-4o-mini}, the same model family as the Generator, given the Classifier's motifeme analysis as context) and once by an independent, blind judge (Gemini 2.5 Flash, given only the raw story text, with no knowledge of which arm produced it or any prior structural analysis). Two deterministic, non-LLM checks supplement both graders: a European-trope keyword scanner and a click-consonant vocabulary verifier cross-checked against the reference lexicon (\texttt{ju\_dictionary.xls}).
+\noindent \textbf{Sample output.}
+
+\noindent The following excerpt is from the \texttt{jnang} narrative for the trickster and
+waterhole theme:
+
+\begin{quote}
+\small
+``The elders, including his wise grandmother, $!ga$, gathered around the campfire each evening
+\ldots{} But Tjua, instead of sharing this precious secret with the thirsty community, decided to
+keep it all for himself. \ldots{} Just as he leaned down to drink, the water began to swirl and
+shimmer, transforming into a great $g//awasi$ spirit \ldots{} \emph{You have kept the life of the
+community from them! You must return what you have stolen!} \ldots{} He led them to the hidden
+waterhole \ldots{} and as they drank, they laughed and danced, sharing the life-giving water.''
+\end{quote}
+
+\noindent The Classifier labelled this chain Lack $\rightarrow$ Interdiction $\rightarrow$
+Violation $\rightarrow$ Consequence $\rightarrow$ Mediation $\rightarrow$ Lack Liquidated, and the
+independent judge recovered the same positions from the text alone. The excerpt also exposes a
+recurring flaw: in 4 of the 8 \texttt{jnang} narratives the Generator names motifeme labels in the
+prose rather than only enacting them, an artefact of the structural prompt that a production
+version would need to suppress.
+
+% \begin{table}[h]
+% \caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
+% \begin{tabular}{@{}lcccc@{}}
+% \toprule
+%  & \multicolumn{2}{c}{In-Pipeline Grader} & \multicolumn{2}{c}{Independent Judge} \\
+% Metric & Baseline & \texttt{jnang} & Baseline & \texttt{jnang} \\
+% \midrule
+% Cultural Authenticity (0--10) & 4.83 & \textbf{7.42} & 2.15 & \textbf{6.36} \\
+% Motifeme Coverage (0--10) & 9.00 & \textbf{9.38} & 9.00 & \textbf{9.44} \\
+% No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
 
 \begin{table}[h]
 \caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
@@ -414,17 +564,7 @@ No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
-\caption{Deterministic (non-LLM) checks, all 8 themes.}\label{tab:deterministic}
-\begin{tabular}{@{}lcc@{}}
-\toprule
-Metric & Baseline & \texttt{jnang} \\
-\midrule
-European-Trope-Free Rate & 75\% & \textbf{100\%} \\
-Click-Consonant Term Verification Rate & n/a (0 glossed terms) & 36\% \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 
 \noindent \textbf{Cultural authenticity.}
@@ -468,8 +608,6 @@ Theme Subset & Baseline & \texttt{jnang} & $\Delta$ \\
 \quad Springhare Dances & 0.33 & 1.67 & +1.34 \\
 \quad Ducks and People & 4.00 & 6.20 & +2.20 \\
 \quad \textit{Held-out mean} & \textit{1.78} & \textit{3.96} & \textit{+2.18} \\
-\midrule
-\textbf{All 8 themes} & \textbf{2.15} & \textbf{6.36} & \textbf{+4.21} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -485,16 +623,16 @@ Theme Subset & Baseline & \texttt{jnang} & $\Delta$ \\
 
 
 
-\section{Discussion \& Conclusion}\label{sec:conclusion}
+\section{Conclusion}\label{sec:conclusion}
 
 \texttt{jnang} combines indigenous \juhoansi{} oral traditions with agentic narrative generation. By pairing a Neo4j knowledge graph encoding Dundes' motifemes and Camp/Bush spatial structure with a multi-agent LangGraph pipeline, the system produces narratives that are structurally constrained by \juhoansi{} cultural mechanics rather than by Indo-European quest arcs. In a pilot comparison against a naive \texttt{gpt-4o-mini} baseline, \texttt{jnang} scored higher on cultural authenticity across all 8 themes under independent judging (sign test, $p \approx 0.004$) and produced zero European tropes.
 
 %\textbf{Community evaluation gap.} 
-A central limitation of this work is that cultural authenticity has so far been judged only by LLMs and a keyword scanner. No \juhoansi{} community members, elders, or cultural experts participated in evaluating the generated stories. For a system whose stated purpose is indigenous cultural preservation, this gap means the pilot results demonstrate computational consistency rather than cultural validity. The participatory evaluation planned with the Donkerbos \juhoansi{} community remains essential before any claims about cultural authenticity can be substantiated.
+Cultural authenticity has only been judged by LLMs and a keyword scanner. No \juhoansi{} community members, elders, or cultural experts participated in evaluating the generated stories. The pilot results demonstrate computational consistency rather than cultural validity. %A cultural validation with \juhoansi{} community members has been planned to substantiate cultural authenticity.
 
 The evaluation was small ($N=16$ narratives, no repeated samples per condition), and results should be viewed as indicative rather than conclusive. The two LLM-based graders agreed on overall grade in only 31\% of cases, and the in-pipeline grader systematically overestimated baseline quality. The current knowledge graph covers only four of the 14 stories in the source corpus, and only 36\% of generated click-consonant terms could be verified against the reference lexicon.
 
-Future work will expand the knowledge graph to the remaining corpus stories, conduct participatory evaluation with \juhoansi{} speakers and cultural experts, audit the Generator Agent's hardcoded vocabulary against the reference lexicon, and explore the framework's applicability to other indigenous oral traditions.
+Future work will expand the knowledge graph to the remaining corpus stories, conduct cultural validation with \juhoansi{} speakers and cultural experts, audit the Generator Agent's hardcoded vocabulary against the reference lexicon, and explore the framework's applicability to other indigenous oral traditions.
 
 
 % \section*{Declarations}
@@ -504,65 +642,7 @@ Future work will expand the knowledge graph to the remaining corpus stories, con
 % \item \textbf{Data Availability}: All ontology triples (\texttt{.ttl}), Neo4j import scripts, and agent code are available in the project repository.
 % \end{itemize}
 
-\begin{comment}
-\begin{appendices}
 
-\section{Sample Generated Narrative and Classifier Output}\label{app:sample}
-
-The narrative below is the unedited \texttt{jnang} output for the trickster and waterhole
-theme, one of the 8 themes in the evaluation reported in Section~\ref{sec:results}. It is
-followed by the Classifier Agent's structural analysis of that text and the two graders' scores,
-so that output quality can be judged directly rather than through a summary score.
-
-\subsection*{Generated narrative}
-
-In the vast and shimmering Kalahari, where the red sand dunes dance under the sun's gaze, there lived a clever springhare named Tjua. Tjua was known for his quick legs and even quicker mind, but he was also known to be a trickster. One day, while hopping through the bush, Tjua stumbled upon a hidden waterhole, its waters sparkling like stars at night.
-
-Lack (of water) soon became the theme of Tjua's thoughts, for the community was suffering from thirst. The elders, including his wise grandmother, !ga, gathered around the campfire each evening, sharing stories of the past and worrying about the dwindling water supplies. But Tjua, instead of sharing this precious secret with the thirsty community, decided to keep it all for himself.
-
-Interdiction came when the spirits of the bush whispered to Tjua, warning him that hoarding water would bring dire consequences. ``Tjua, do not hide this waterhole,'' they said in voices like rustling leaves. But Tjua, thinking of himself, ignored the spirits' words and continued to visit the waterhole in secret, drinking deeply while the others parched under the sun.
-
-As days passed, the community grew weaker. The children, led by Tjua's age-mate, !xo, began to search tirelessly for water. They asked Tjua, ``Have you seen any water, dear friend?'' Tjua merely smiled, hiding the truth behind his twitching whiskers. This violation of trust would not go unnoticed.
-
-The consequence came one evening when the sun dipped low, painting the sky with hues of orange and purple. Tjua, feeling bold, decided to drink from the waterhole one last time before sharing the secret. As he approached, he noticed the ground trembling slightly. This was no ordinary waterhole; it was a sacred place, and the spirits were angered by his selfishness.
-
-Just as he leaned down to drink, the water began to swirl and shimmer, transforming into a great g//awasi spirit, glowing and formidable. ``Tjua, you have kept the life of the community from them! You must return what you have stolen!'' the spirit bellowed, its voice echoing across the dunes.
-
-Mediation came when Tjua, trembling with fear, realized the depth of his violation. He remembered the laughter of the children, the tired faces of the elders, and the parched earth that surrounded him. With a heavy heart, he agreed to share the secret waterhole. He dashed back through the bush, calling out to the community, ``Come! I have found water!''
-
-Upon reaching the camp, Tjua found everyone gathered, their eyes wide with hope. He led them to the hidden waterhole, where the water sparkled again under the moonlight. The community rejoiced, filling their buckets, and as they drank, they laughed and danced, sharing the life-giving water.
-
-Through this act of restoration, Tjua learned the value of community over individual gain. The spirits of the bush smiled upon them, and from that day forward, Tjua became known not just as a trickster, but as a provider who had learned to share. And so, the community flourished, united by the precious water and the bonds of kinship that tied them together.
-
-From that day, every time they gathered around the campfire, they would tell the story of Tjua and the hidden waterhole, a reminder that sharing brings life and joy to all.
-
-\subsection*{Classifier Agent output}
-
-\noindent \textbf{Motifemes identified}: Lack, Interdiction, Violation, Consequence, Mediation, Lack Liquidated.
-
-\medskip
-
-\noindent \textbf{Narrative moves}:
-\begin{enumerate}
-    \item Tjua discovers hidden waterhole
-    \item Elders express concern over water shortage
-    \item Spirits warn Tjua against hoarding water
-    \item Tjua ignores spirits and drinks from waterhole
-    \item Community searches for water
-    \item G//awasi spirit confronts Tjua for his selfishness
-    \item Tjua agrees to share the waterhole with the community
-    \item Community rejoices as they drink from the waterhole
-\end{enumerate}
-
-\subsection*{Grader scores for this narrative}
-
-\noindent In-pipeline Grader: cultural authenticity 6.67,
-motifeme coverage 10.0, overall \textit{Fails}.
-Independent judge: cultural authenticity 8.0,
-motifeme coverage 10.0, overall \textit{Good}.
-
-\end{appendices}
-\end{comment}
 \begingroup
 \small
 \medskip
