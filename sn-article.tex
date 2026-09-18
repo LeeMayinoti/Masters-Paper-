@@ -272,18 +272,44 @@ The methodology followed a sequential process from source analysis to narrative 
 
 The \texttt{jnang} architecture consists of three main layers: the Semantic Ontology Layer, the Knowledge Graph Layer, and the LangGraph Multi-Agent Pipeline.
 
+% \begin{figure}[h]
+% \centering
+% \begin{tikzpicture}[
+% node distance=1.1cm,
+% layer/.style={rectangle, draw, rounded corners, minimum width=8cm, minimum height=1.1cm, align=center, fill=gray!8},
+% arr/.style={-{Latex[length=2.5mm]}, thick}
+% ]
+% \node[layer] (ont) {Semantic Ontology Layer\\\texttt{folktales\_ontology.ttl} (RDF/OWL)};
+% \node[layer, below=of ont] (kg) {Knowledge Graph Layer\\Neo4j + \texttt{context\_builder.py}};
+% \node[layer, below=of kg] (agents) {LangGraph Multi-Agent Pipeline\\Generator $\rightarrow$ Classifier $\rightarrow$ Grader};
+% \draw[arr] (ont) -- (kg) node[midway, right, font=\footnotesize] {\texttt{import\_rdf.py}};
+% \draw[arr] (kg) -- (agents) node[midway, right, font=\footnotesize] {Cypher subgraph retrieval};
+% \end{tikzpicture}
+% \caption{Three-layer \texttt{jnang} architecture. The RDF/OWL ontology is ingested into a Neo4j knowledge graph, which provides theme-matched subgraphs to the multi-agent pipeline during generation.}
+% \label{fig:architecture}
+% \end{figure}
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
-node distance=1.1cm,
-layer/.style={rectangle, draw, rounded corners, minimum width=8cm, minimum height=1.1cm, align=center, fill=gray!8},
-arr/.style={-{Latex[length=2.5mm]}, thick}
+node distance=0.75cm,
+layer/.style={
+    rectangle,
+    draw,
+    rounded corners,
+    minimum width=6.5cm,
+    minimum height=0.8cm,
+    align=center,
+    fill=gray!8,
+    font=\small
+},
+arr/.style={-{Latex[length=2mm]}, thick}
 ]
 \node[layer] (ont) {Semantic Ontology Layer\\\texttt{folktales\_ontology.ttl} (RDF/OWL)};
 \node[layer, below=of ont] (kg) {Knowledge Graph Layer\\Neo4j + \texttt{context\_builder.py}};
 \node[layer, below=of kg] (agents) {LangGraph Multi-Agent Pipeline\\Generator $\rightarrow$ Classifier $\rightarrow$ Grader};
-\draw[arr] (ont) -- (kg) node[midway, right, font=\footnotesize] {\texttt{import\_rdf.py}};
-\draw[arr] (kg) -- (agents) node[midway, right, font=\footnotesize] {Cypher subgraph retrieval};
+
+\draw[arr] (ont) -- (kg) node[midway, right, font=\scriptsize] {\texttt{import\_rdf.py}};
+\draw[arr] (kg) -- (agents) node[midway, right, font=\scriptsize] {Cypher subgraph retrieval};
 \end{tikzpicture}
 \caption{Three-layer \texttt{jnang} architecture. The RDF/OWL ontology is ingested into a Neo4j knowledge graph, which provides theme-matched subgraphs to the multi-agent pipeline during generation.}
 \label{fig:architecture}
@@ -321,7 +347,7 @@ The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating rel
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,trim=10 10 10 10,clip]{figures/kg-move-chain-story2.png}
+\includegraphics[width=0.8\textwidth,trim=10 10 10 10,clip]{figures/kg-move-chain-story2.png}
 \caption{Cypher query tracing the sequential motifeme and narrative-move chain for the \textit{Honey and the Flies} story. The retrieved structure provides an ordered sequence of actions, locations, characters, and objects rather than an unordered text excerpt.}
 \label{fig:kg-move-chain}
 \end{figure}
@@ -399,6 +425,20 @@ arr/.style={-{Latex[length=2.2mm]}, thick}
 \section{Results \& Evaluation}\label{sec:results}
 
  The system was benchmarked \texttt{jnang} against a naive baseline,  the same \texttt{gpt-4o-mini} model prompted for a \juhoansi{} folktale with no ontology, knowledge graph, RAG, or dictionary grounding across 8 pre-registered themes: the 5 preset narrative themes (sharing honey, the Moon's immortality message, a trickster hiding a waterhole, the origin of fire, and the Elephant holding back water) and 3 held-out stories from the source corpus (Ostrich and the Tortoise, Springhare Dances, Ducks and People) absent from both the RDF ontology and the RAG pool, testing generalization rather than memorization. Each of the resulting 16 narratives (one per theme per arm; $N=16$, no repeats  a pilot-scale, indicative comparison rather than a powered study) was scored twice: once by the pipeline's own in-pipeline grader (\texttt{gpt-4o-mini}, the same model family as the Generator, given the Classifier's motifeme analysis as context) and once by an independent, blind judge (Gemini 2.5 Flash, given only the raw story text, with no knowledge of which arm produced it or any prior structural analysis). Two deterministic, non-LLM checks supplement both graders: a European-trope keyword scanner and a click-consonant vocabulary verifier cross-checked against the reference lexicon (\texttt{ju\_dictionary.xls}).
+% here you could put a few sample sentences of the story
+% \begin{table}[h]
+% \caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
+% \begin{tabular}{@{}lcccc@{}}
+% \toprule
+%  & \multicolumn{2}{c}{In-Pipeline Grader} & \multicolumn{2}{c}{Independent Judge} \\
+% Metric & Baseline & \texttt{jnang} & Baseline & \texttt{jnang} \\
+% \midrule
+% Cultural Authenticity (0--10) & 4.83 & \textbf{7.42} & 2.15 & \textbf{6.36} \\
+% Motifeme Coverage (0--10) & 9.00 & \textbf{9.38} & 9.00 & \textbf{9.44} \\
+% No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
 
 \begin{table}[h]
 \caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
@@ -497,16 +537,16 @@ Theme Subset & Baseline & \texttt{jnang} & $\Delta$ \\
 
 
 
-\section{Discussion \& Conclusion}\label{sec:conclusion}
+\section{Conclusion}\label{sec:conclusion}
 
 \texttt{jnang} combines indigenous \juhoansi{} oral traditions with agentic narrative generation. By pairing a Neo4j knowledge graph encoding Dundes' motifemes and Camp/Bush spatial structure with a multi-agent LangGraph pipeline, the system produces narratives that are structurally constrained by \juhoansi{} cultural mechanics rather than by Indo-European quest arcs. In a pilot comparison against a naive \texttt{gpt-4o-mini} baseline, \texttt{jnang} scored higher on cultural authenticity across all 8 themes under independent judging (sign test, $p \approx 0.004$) and produced zero European tropes.
 
 %\textbf{Community evaluation gap.} 
-Cultural authenticity has only been judged by LLMs and a keyword scanner. No \juhoansi{} community members, elders, or cultural experts participated in evaluating the generated stories. The pilot results demonstrate computational consistency rather than cultural validity. The participatory evaluation planned with the Donkerbos \juhoansi{} community remains essential before any claims about cultural authenticity can be substantiated.
+Cultural authenticity has only been judged by LLMs and a keyword scanner. No \juhoansi{} community members, elders, or cultural experts participated in evaluating the generated stories. The pilot results demonstrate computational consistency rather than cultural validity. %A cultural validation with \juhoansi{} community members has been planned to substantiate cultural authenticity.
 
 The evaluation was small ($N=16$ narratives, no repeated samples per condition), and results should be viewed as indicative rather than conclusive. The two LLM-based graders agreed on overall grade in only 31\% of cases, and the in-pipeline grader systematically overestimated baseline quality. The current knowledge graph covers only four of the 14 stories in the source corpus, and only 36\% of generated click-consonant terms could be verified against the reference lexicon.
 
-Future work will expand the knowledge graph to the remaining corpus stories, conduct participatory evaluation with \juhoansi{} speakers and cultural experts, audit the Generator Agent's hardcoded vocabulary against the reference lexicon, and explore the framework's applicability to other indigenous oral traditions.
+Future work will expand the knowledge graph to the remaining corpus stories, conduct cultural validation with \juhoansi{} speakers and cultural experts, audit the Generator Agent's hardcoded vocabulary against the reference lexicon, and explore the framework's applicability to other indigenous oral traditions.
 
 
 % \section*{Declarations}
