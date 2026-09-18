@@ -383,51 +383,91 @@ The system uses three sequential agents. The Generator performs the main narrati
 % \label{fig:pipeline}
 % \end{figure}
 
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+% box/.style={
+%     rectangle, draw, rounded corners,
+%     minimum width=2.8cm,
+%     minimum height=0.7cm,
+%     align=center,
+%     fill=gray!8,
+%     font=\footnotesize
+% },
+% term/.style={
+%     rectangle, draw, rounded corners,
+%     minimum width=1.8cm,
+%     minimum height=0.6cm,
+%     align=center,
+%     font=\footnotesize
+% },
+% dec/.style={
+%     diamond, draw,
+%     align=center,
+%     fill=gray!8,
+%     font=\footnotesize,
+%     inner sep=2pt
+% },
+% arr/.style={-{Latex[length=2mm]}, thick}
+% ]
+%
+% \node[term] (start) at (0,4.2) {start};
+% \node[dec] (router) at (0,3.2) {input\_story\\provided?};
+%
+% \node[box] (echo) at (-2.6,2.1) {echo\_input\_story};
+% \node[box] (gen) at (2.6,2.1) {Agent 1: Generator};
+%
+% \node[box] (cls) at (0,1.1) {Agent 2: Classifier};
+% \node[box] (grd) at (0,0.2) {Agent 3: Grader};
+% \node[term] (end) at (0,-0.7) {end};
+%
+% \draw[arr] (start) -- (router);
+%
+% \draw[arr] (router) -| 
+%     node[pos=0.3, above, font=\tiny] {yes} (echo);
+%
+% \draw[arr] (router) -| 
+%     node[pos=0.3, above, font=\tiny] {no} (gen);
+%
+% \draw[arr] (echo) |- (cls);
+% \draw[arr] (gen) |- (cls);
+%
+% \draw[arr] (cls) -- (grd);
+% \draw[arr] (grd) -- (end);
+%
+% \end{tikzpicture}
+% \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
+% \label{fig:pipeline}
+% \end{figure}
 \begin{figure}[H]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-box/.style={
-    rectangle, draw, rounded corners,
-    minimum width=2.8cm,
-    minimum height=0.6cm,
-    align=center,
-    fill=gray!8,
-    font=\footnotesize
-},
-term/.style={
-    rectangle, draw, rounded corners,
-    minimum width=1.8cm,
-    minimum height=0.55cm,
-    align=center,
-    font=\footnotesize
-},
-dec/.style={
-    diamond, draw,
-    align=center,
-    fill=gray!8,
-    font=\footnotesize,
-    inner sep=1.5pt
-},
+box/.style={rectangle, draw, rounded corners, minimum width=2.6cm,
+            minimum height=0.9cm, align=center, fill=gray!8, font=\footnotesize},
+term/.style={rectangle, draw, rounded corners, minimum width=1.4cm,
+             minimum height=0.9cm, align=center, font=\footnotesize},
+dec/.style={diamond, draw, aspect=2, align=center, fill=gray!8,
+            font=\scriptsize, inner sep=1pt},
 arr/.style={-{Latex[length=2mm]}, thick}
 ]
-
-\node[term] (start) at (0,3.6) {start};
-\node[dec] (router) at (0,2.7) {input\_story\\provided?};
-\node[box] (echo) at (-2.6,1.8) {echo\_input\_story};
-\node[box] (gen) at (2.6,1.8) {Agent 1: Generator};
-\node[box] (cls) at (0,1.0) {Agent 2: Classifier};
-\node[box] (grd) at (0,0.3) {Agent 3: Grader};
-\node[term] (end) at (0,-0.4) {end};
+\node[term] (start)  at (0,0)      {start};
+\node[dec]  (router) at (2.9,0)    {input\_story\\provided?};
+\node[box]  (echo)   at (6.6,1.3)  {echo\_input\_story};
+\node[box]  (gen)    at (6.6,-1.3) {Agent 1: Generator};
+\node[box]  (cls)    at (10.1,0)   {Agent 2: Classifier};
+\node[box]  (grd)    at (13.2,0)   {Agent 3: Grader};
+\node[term] (end)    at (15.4,0)   {end};
 
 \draw[arr] (start) -- (router);
-\draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {yes} (echo);
-\draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {no} (gen);
-\draw[arr] (echo) |- (cls);
-\draw[arr] (gen) |- (cls);
+\draw[arr] (router) |- node[pos=0.75, above, font=\tiny] {yes} (echo);
+\draw[arr] (router) |- node[pos=0.75, below, font=\tiny] {no} (gen);
+\draw[arr] (echo) -| (cls);
+\draw[arr] (gen)  -| (cls);
 \draw[arr] (cls) -- (grd);
 \draw[arr] (grd) -- (end);
-
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
 \label{fig:pipeline}
 \end{figure}
@@ -474,7 +514,28 @@ arr/.style={-{Latex[length=2mm]}, thick}
 \section{Results \& Evaluation}\label{sec:results}
 
  The system was benchmarked \texttt{jnang} against a naive baseline,  the same \texttt{gpt-4o-mini} model prompted for a \juhoansi{} folktale with no ontology, knowledge graph, RAG, or dictionary grounding across 8 pre-registered themes: the 5 preset narrative themes (sharing honey, the Moon's immortality message, a trickster hiding a waterhole, the origin of fire, and the Elephant holding back water) and 3 held-out stories from the source corpus (Ostrich and the Tortoise, Springhare Dances, Ducks and People) absent from both the RDF ontology and the RAG pool, testing generalization rather than memorization. Each of the resulting 16 narratives (one per theme per arm; $N=16$, no repeats  a pilot-scale, indicative comparison rather than a powered study) was scored twice: once by the pipeline's own in-pipeline grader (\texttt{gpt-4o-mini}, the same model family as the Generator, given the Classifier's motifeme analysis as context) and once by an independent, blind judge (Gemini 2.5 Flash, given only the raw story text, with no knowledge of which arm produced it or any prior structural analysis). Two deterministic, non-LLM checks supplement both graders: a European-trope keyword scanner and a click-consonant vocabulary verifier cross-checked against the reference lexicon (\texttt{ju\_dictionary.xls}).
-% here you could put a few sample sentences of the story
+\noindent \textbf{Sample output.}
+
+\noindent The following excerpt is from the \texttt{jnang} narrative for the trickster and
+waterhole theme:
+
+\begin{quote}
+\small
+``The elders, including his wise grandmother, $!ga$, gathered around the campfire each evening
+\ldots{} But Tjua, instead of sharing this precious secret with the thirsty community, decided to
+keep it all for himself. \ldots{} Just as he leaned down to drink, the water began to swirl and
+shimmer, transforming into a great $g//awasi$ spirit \ldots{} \emph{You have kept the life of the
+community from them! You must return what you have stolen!} \ldots{} He led them to the hidden
+waterhole \ldots{} and as they drank, they laughed and danced, sharing the life-giving water.''
+\end{quote}
+
+\noindent The Classifier labelled this chain Lack $\rightarrow$ Interdiction $\rightarrow$
+Violation $\rightarrow$ Consequence $\rightarrow$ Mediation $\rightarrow$ Lack Liquidated, and the
+independent judge recovered the same positions from the text alone. The excerpt also exposes a
+recurring flaw: in 4 of the 8 \texttt{jnang} narratives the Generator names motifeme labels in the
+prose rather than only enacting them, an artefact of the structural prompt that a production
+version would need to suppress.
+
 % \begin{table}[h]
 % \caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
 % \begin{tabular}{@{}lcccc@{}}
@@ -509,30 +570,6 @@ No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
 \noindent \textbf{Cultural authenticity.}
 
 \noindent  Under the independent judge, \texttt{jnang} scored higher than the baseline on cultural authenticity in all 8 themes ($k = 8$ of $n = 8$ positive differences). A one-sided sign test yields $p = 0.5^{8} \approx 0.004$, rejecting the null hypothesis of equal performance. Because the test relies on sign counts rather than score magnitudes, it is sensitive to even a single reversal: if one theme flipped direction, $k = 7$ of $n = 8$ would give $p \approx 0.035$, still below $\alpha = 0.05$ but substantially weaker. The deterministic trope scanner provides independent, non-LLM support for this result: the baseline produced European terms such as ``king'' and ``gold'' in 2 of 8 stories, while \texttt{jnang} produced none.
-
-\medskip
-
-\noindent \textbf{Sample output.}
-
-\noindent The following excerpt is from the \texttt{jnang} narrative for the trickster and
-waterhole theme:
-
-\begin{quote}
-\small
-``The elders, including his wise grandmother, $!ga$, gathered around the campfire each evening
-\ldots{} But Tjua, instead of sharing this precious secret with the thirsty community, decided to
-keep it all for himself. \ldots{} Just as he leaned down to drink, the water began to swirl and
-shimmer, transforming into a great $g//awasi$ spirit \ldots{} \emph{You have kept the life of the
-community from them! You must return what you have stolen!} \ldots{} He led them to the hidden
-waterhole \ldots{} and as they drank, they laughed and danced, sharing the life-giving water.''
-\end{quote}
-
-\noindent The Classifier labelled this chain Lack $\rightarrow$ Interdiction $\rightarrow$
-Violation $\rightarrow$ Consequence $\rightarrow$ Mediation $\rightarrow$ Lack Liquidated, and the
-independent judge recovered the same positions from the text alone. The excerpt also exposes a
-recurring flaw: in 4 of the 8 \texttt{jnang} narratives the Generator names motifeme labels in the
-prose rather than only enacting them, an artefact of the structural prompt that a production
-version would need to suppress.
 
 \medskip
 
