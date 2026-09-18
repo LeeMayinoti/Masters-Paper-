@@ -356,21 +356,69 @@ The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating rel
 
 The system uses three sequential agents. The Generator performs the main narrative generation, while the Classifier and Grader provide structural analysis and evaluation see figure \ref{fig:pipeline}.
 
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+% box/.style={rectangle, draw, rounded corners, minimum width=2.8cm, minimum height=0.8cm, align=center, fill=gray!8, font=\footnotesize},
+% term/.style={rectangle, draw, rounded corners, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\footnotesize},
+% dec/.style={diamond, draw, align=center, fill=gray!8, font=\footnotesize, inner sep=2pt},
+% arr/.style={-{Latex[length=2.2mm]}, thick}
+% ]
+% \node[term] (start) at (0,6.8) {start};
+% \node[dec] (router) at (0,4.8) {input\_story\\provided?};
+% \node[box] (echo) at (-2.6,3.2) {echo\_input\_story};
+% \node[box] (gen) at (2.6,3.2) {Agent 1: Generator};
+% \node[box] (cls) at (0,1.8) {Agent 2: Classifier};
+% \node[box] (grd) at (0,0.6) {Agent 3: Grader};
+% \node[term] (end) at (0,-0.6) {end};
+% \draw[arr] (start) -- (router);
+% \draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {yes} (echo);
+% \draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {no} (gen);
+% \draw[arr] (echo) |- (cls);
+% \draw[arr] (gen) |- (cls);
+% \draw[arr] (cls) -- (grd);
+% \draw[arr] (grd) -- (end);
+% \end{tikzpicture}
+% \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
+% \label{fig:pipeline}
+% \end{figure}
+
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-box/.style={rectangle, draw, rounded corners, minimum width=2.8cm, minimum height=0.8cm, align=center, fill=gray!8, font=\footnotesize},
-term/.style={rectangle, draw, rounded corners, minimum width=1.8cm, minimum height=0.7cm, align=center, font=\footnotesize},
-dec/.style={diamond, draw, align=center, fill=gray!8, font=\footnotesize, inner sep=2pt},
-arr/.style={-{Latex[length=2.2mm]}, thick}
+box/.style={
+    rectangle, draw, rounded corners,
+    minimum width=2.8cm,
+    minimum height=0.6cm,
+    align=center,
+    fill=gray!8,
+    font=\footnotesize
+},
+term/.style={
+    rectangle, draw, rounded corners,
+    minimum width=1.8cm,
+    minimum height=0.55cm,
+    align=center,
+    font=\footnotesize
+},
+dec/.style={
+    diamond, draw,
+    align=center,
+    fill=gray!8,
+    font=\footnotesize,
+    inner sep=1.5pt
+},
+arr/.style={-{Latex[length=2mm]}, thick}
 ]
-\node[term] (start) at (0,6.8) {start};
-\node[dec] (router) at (0,4.8) {input\_story\\provided?};
-\node[box] (echo) at (-2.6,3.2) {echo\_input\_story};
-\node[box] (gen) at (2.6,3.2) {Agent 1: Generator};
-\node[box] (cls) at (0,1.8) {Agent 2: Classifier};
-\node[box] (grd) at (0,0.6) {Agent 3: Grader};
-\node[term] (end) at (0,-0.6) {end};
+
+\node[term] (start) at (0,3.6) {start};
+\node[dec] (router) at (0,2.7) {input\_story\\provided?};
+\node[box] (echo) at (-2.6,1.8) {echo\_input\_story};
+\node[box] (gen) at (2.6,1.8) {Agent 1: Generator};
+\node[box] (cls) at (0,1.0) {Agent 2: Classifier};
+\node[box] (grd) at (0,0.3) {Agent 3: Grader};
+\node[term] (end) at (0,-0.4) {end};
+
 \draw[arr] (start) -- (router);
 \draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {yes} (echo);
 \draw[arr] (router) -| node[pos=0.3, above, font=\tiny] {no} (gen);
@@ -378,6 +426,7 @@ arr/.style={-{Latex[length=2.2mm]}, thick}
 \draw[arr] (gen) |- (cls);
 \draw[arr] (cls) -- (grd);
 \draw[arr] (grd) -- (end);
+
 \end{tikzpicture}
 \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
 \label{fig:pipeline}
