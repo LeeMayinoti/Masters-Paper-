@@ -1,0 +1,13 @@
+# Local working vault: reviewer correspondence, drafts, build scripts
+vault/
+
+# Word lock files
+~$*
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.synctex.gz
