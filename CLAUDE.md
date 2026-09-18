@@ -11,7 +11,7 @@ This is the LaTeX manuscript source for a Master's paper (NUST, Department of So
 
 ## Compiling the paper
 
-Single-file Springer Nature journal article, class option `sn-apa` (APA author-year reference style, via the `apacite` package and `sn-apacite.bst`):
+Single-file Springer Nature journal article, class option `sn-mathphys-num` (numbered references, math/physical sciences style):
 
 ```
 pdflatex sn-article.tex
@@ -20,7 +20,7 @@ pdflatex sn-article.tex
 pdflatex sn-article.tex
 ```
 
-Two `pdflatex` passes after `bibtex` are required to resolve citations and the reference list. The `.bst` files other than `sn-apacite.bst` (mathphys-num, aps, basic, chicago, nature, vancouver-*) belong to the template and are unused unless the `\documentclass` option in `sn-article.tex` is changed.
+Two `pdflatex` passes after `bibtex` are required to resolve citations and the reference list. The `.bst` files other than `sn-mathphys-num.bst` (apacite, aps, basic, chicago, nature, vancouver-*) belong to the template and are unused unless the `\documentclass` option in `sn-article.tex` is changed.
 
 There is no Makefile or latexmkrc — run the four commands above directly, or use `latexmk -pdf sn-article.tex` if available.
 
