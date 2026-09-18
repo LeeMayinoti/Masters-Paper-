@@ -75,9 +75,7 @@ The main objective of this work is to model, engineer, and evaluate \texttt{jnan
 
 \begin{enumerate}
     \item \textbf{Ontological Formalization}: Create an ontology  of existing Ju|hoansi narratives from Alan dundes  motifeme morphology and turn it into a  Neo4j Knowledge Graph.
-    \\
     \item \textbf{Agentic Steering}: Develop a 3-agent LangGraph pipeline (Generator, Classifier, Evaluator), with this paper centered on the \textit{Generator Agent}, which constrains LLM (\texttt{gpt-4o-mini}) output through ontology- and graph-grounded context to eliminate Western narrative tropes.
-    \\
     \item \textbf{Evaluation \& Benchmarking}: Benchmark AI-generated narratives against human-curated \juhoansi{} folktales on cultural authenticity, motifeme coherence, non-hoarding adherence, and click-consonant orthographic precision.
 \end{enumerate}
 
@@ -338,14 +336,14 @@ propp:ProppianRole a owl:Class .
 
 The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating relationships such as \texttt{:PERFORMS\_FUNCTION}, \texttt{:HAS\_ROLE}, \texttt{:LACKS}, and \texttt{:FOLLOWS}. During generation, \texttt{context\_builder.py} uses Cypher queries to retrieve subgraphs relevant to the selected narrative  see figure \ref{fig:kg-graph} and \ref{fig:kg-move-chain}. This provides the Generator Agent with both narrative content and its structural relationships.
 
-\begin{figure}[H]
+\begin{figure}[!tb]
 \centering
 \includegraphics[width=\textwidth,trim=10 10 10 10,clip]{figures/kg-2hop-query.png}
 \caption{Neo4j 2-hop neighborhood query around a story's narrative functions. The graph connects characters, narrative functions, objects, roles, and locations through typed relationships for the \textit{Elephant} story.}
 \label{fig:kg-graph}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!tb]
 \centering
 \includegraphics[width=0.8\textwidth,trim=10 10 10 10,clip]{figures/kg-move-chain-story2.png}
 \caption{Cypher query tracing the sequential motifeme and narrative-move chain for the \textit{Honey and the Flies} story. The retrieved structure provides an ordered sequence of actions, locations, characters, and objects rather than an unordered text excerpt.}
@@ -439,7 +437,7 @@ The system uses three sequential agents. The Generator performs the main narrati
 % \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
 % \label{fig:pipeline}
 % \end{figure}
-\begin{figure}[H]
+\begin{figure}[!tb]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -514,9 +512,7 @@ arr/.style={-{Latex[length=2mm]}, thick}
 \section{Results \& Evaluation}\label{sec:results}
 
  The system was benchmarked \texttt{jnang} against a naive baseline,  the same \texttt{gpt-4o-mini} model prompted for a \juhoansi{} folktale with no ontology, knowledge graph, RAG, or dictionary grounding across 8 pre-registered themes: the 5 preset narrative themes (sharing honey, the Moon's immortality message, a trickster hiding a waterhole, the origin of fire, and the Elephant holding back water) and 3 held-out stories from the source corpus (Ostrich and the Tortoise, Springhare Dances, Ducks and People) absent from both the RDF ontology and the RAG pool, testing generalization rather than memorization. Each of the resulting 16 narratives (one per theme per arm; $N=16$, no repeats  a pilot-scale, indicative comparison rather than a powered study) was scored twice: once by the pipeline's own in-pipeline grader (\texttt{gpt-4o-mini}, the same model family as the Generator, given the Classifier's motifeme analysis as context) and once by an independent, blind judge (Gemini 2.5 Flash, given only the raw story text, with no knowledge of which arm produced it or any prior structural analysis). Two deterministic, non-LLM checks supplement both graders: a European-trope keyword scanner and a click-consonant vocabulary verifier cross-checked against the reference lexicon (\texttt{ju\_dictionary.xls}).
-\noindent \textbf{Sample output.}
-
-\noindent The following excerpt is from the \texttt{jnang} narrative for the trickster and
+\noindent\textbf{Sample output.} The following excerpt is from the \texttt{jnang} narrative for the trickster and
 waterhole theme:
 
 \begin{quote}
@@ -567,27 +563,13 @@ No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
 
 
 
-\noindent \textbf{Cultural authenticity.}
+\noindent\textbf{Cultural authenticity.} Under the independent judge, \texttt{jnang} scored higher than the baseline on cultural authenticity in all 8 themes ($k = 8$ of $n = 8$ positive differences). A one-sided sign test yields $p = 0.5^{8} \approx 0.004$, rejecting the null hypothesis of equal performance. Because the test relies on sign counts rather than score magnitudes, it is sensitive to even a single reversal: if one theme flipped direction, $k = 7$ of $n = 8$ would give $p \approx 0.035$, still below $\alpha = 0.05$ but substantially weaker. The deterministic trope scanner provides independent, non-LLM support for this result: the baseline produced European terms such as ``king'' and ``gold'' in 2 of 8 stories, while \texttt{jnang} produced none.
 
-\noindent  Under the independent judge, \texttt{jnang} scored higher than the baseline on cultural authenticity in all 8 themes ($k = 8$ of $n = 8$ positive differences). A one-sided sign test yields $p = 0.5^{8} \approx 0.004$, rejecting the null hypothesis of equal performance. Because the test relies on sign counts rather than score magnitudes, it is sensitive to even a single reversal: if one theme flipped direction, $k = 7$ of $n = 8$ would give $p \approx 0.035$, still below $\alpha = 0.05$ but substantially weaker. The deterministic trope scanner provides independent, non-LLM support for this result: the baseline produced European terms such as ``king'' and ``gold'' in 2 of 8 stories, while \texttt{jnang} produced none.
+\noindent\textbf{Self-grading bias.} The two graders showed substantial disagreement. Their overall grades matched in only 5 of 16 cases (31\%), and their cultural-authenticity scores differed by an average of 1.87 points. The in-pipeline grader also rated the baseline much more favorably than the independent judge (4.83 vs. 2.15), while the scores for \texttt{jnang} were more similar (7.42 vs. 6.36). This suggests that using a grader from the same model family as the Generator may overestimate performance, supporting the use of an independent judge.
 
-\medskip
+\noindent\textbf{Hoarding-rule interpretation.} Both graders apply the same hard rule: each is instructed that rewarded or unpunished resource hoarding sets the corresponding sub-score to zero, and both derive an overall grade of \textit{Fails} when that occurs. The instruments differ in model family and in the information they receive, not in this criterion. The in-pipeline Grader Agent sees the Classifier's motifeme analysis alongside the story; the independent judge sees only the raw narrative text. The gap in Table~\ref{tab:results} (No Unpunished Hoarding Rate: 88\% for \texttt{jnang} vs. 38\% for the baseline under the independent judge) is therefore a like-for-like comparison under an identical rule, applied by a model outside the Generator's family.
 
-\noindent \textbf{Self-grading bias.}
-
-\noindent  The two graders showed substantial disagreement. Their overall grades matched in only 5 of 16 cases (31\%), and their cultural-authenticity scores differed by an average of 1.87 points. The in-pipeline grader also rated the baseline much more favorably than the independent judge (4.83 vs. 2.15), while the scores for \texttt{jnang} were more similar (7.42 vs. 6.36). This suggests that using a grader from the same model family as the Generator may overestimate performance, supporting the use of an independent judge.
-
-\medskip
-
-\noindent \textbf{Hoarding-rule interpretation.}
-
-\noindent  Both graders apply the same hard rule: each is instructed that rewarded or unpunished resource hoarding sets the corresponding sub-score to zero, and both derive an overall grade of \textit{Fails} when that occurs. The instruments differ in model family and in the information they receive, not in this criterion. The in-pipeline Grader Agent sees the Classifier's motifeme analysis alongside the story; the independent judge sees only the raw narrative text. The gap in Table~\ref{tab:results} (No Unpunished Hoarding Rate: 88\% for \texttt{jnang} vs. 38\% for the baseline under the independent judge) is therefore a like-for-like comparison under an identical rule, applied by a model outside the Generator's family.
-
-\medskip
-
-\noindent \textbf{Generalization.}
-
-\noindent  Three themes absent from both the RDF ontology and RAG pool tested out-of-distribution generalization. Table~\ref{tab:generalization} reports these separately from the 5 preset themes.
+\noindent\textbf{Generalization.} Three themes absent from both the RDF ontology and RAG pool tested out-of-distribution generalization. Table~\ref{tab:generalization} reports these separately from the 5 preset themes.
 
 \begin{table}[h]
 \caption{Cultural authenticity by theme subset (independent judge).}\label{tab:generalization}
@@ -614,11 +596,7 @@ Theme Subset & Baseline & \texttt{jnang} & $\Delta$ \\
 
 \noindent  \texttt{jnang} outperformed the baseline on all 3 held-out themes, but the mean gain ($+2.18$) was less than half the preset-theme gain ($+5.43$). This pattern is consistent with the architecture: the Generator Agent's structural context comes from Cypher-retrieved subgraphs, and held-out themes have no graph-encoded motifeme chains to retrieve. The result suggests that the ontology provides genuine structural grounding rather than memorized retrieval, but also that generalization weakens when graph coverage is incomplete.
 
-\medskip
-
-\noindent  \textbf{Orthographic precision.}
-
-\noindent Orthographic accuracy remains a limitation that undercuts the orthographic-precision objective stated in Section~\ref{sec:intro}. Of the 11 click-consonant glossed terms produced across all 8 \texttt{jnang} stories, only 4 (36\%) could be verified against the reference lexicon (\texttt{ju\_dictionary.xls}). The unverified terms fall into two categories: hardcoded vocabulary in the Generator Agent's system prompt that does not match the reference lexicon's entry format (e.g. kinship and spirit terms), and terms generated by the LLM for concepts outside the lexicon's 4{,}737-entry coverage. The baseline produced zero glossed \juhoansi{} terms, making direct comparison impossible. A story can therefore pass every cultural and structural check while still containing invented or incorrect \juhoansi{} words. Future work should audit and align the hardcoded vocabulary with the reference lexicon and expand lexicon coverage rather than relying on LLM-generated orthography.
+\noindent\textbf{Orthographic precision.} Orthographic accuracy remains a limitation that undercuts the orthographic-precision objective stated in Section~\ref{sec:intro}. Of the 11 click-consonant glossed terms produced across all 8 \texttt{jnang} stories, only 4 (36\%) could be verified against the reference lexicon (\texttt{ju\_dictionary.xls}). The unverified terms fall into two categories: hardcoded vocabulary in the Generator Agent's system prompt that does not match the reference lexicon's entry format (e.g. kinship and spirit terms), and terms generated by the LLM for concepts outside the lexicon's 4{,}737-entry coverage. The baseline produced zero glossed \juhoansi{} terms, making direct comparison impossible. A story can therefore pass every cultural and structural check while still containing invented or incorrect \juhoansi{} words. Future work should audit and align the hardcoded vocabulary with the reference lexicon and expand lexicon coverage rather than relying on LLM-generated orthography.
 
 
 
