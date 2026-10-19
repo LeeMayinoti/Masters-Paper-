@@ -11,7 +11,7 @@ This is the LaTeX manuscript source for a Master's paper (NUST, Department of So
 
 ## Compiling the paper
 
-Single-file Springer Nature journal article, class option `sn-mathphys-num` (numbered references, math/physical sciences style):
+Single-file **Springer LNCS** conference paper (`llncs.cls` 2026-09-03 and `splncs04.bst` from Springer's official LNCS proceedings template ZIP, Times via `newtx` as in Springer's sample paper), as required for the ICISET 2026 camera-ready. Hard limit: **12 pages including references**. Artwork must be vector or meet Springer's resolution rules (300 dpi photos, 600 dpi combination art, line art at least 800 dpi and preferably 1200), which is why the Neo4j figures are drawn in TikZ / typeset as tables rather than embedded as screenshots.
 
 ```
 pdflatex sn-article.tex
@@ -20,7 +20,7 @@ pdflatex sn-article.tex
 pdflatex sn-article.tex
 ```
 
-Two `pdflatex` passes after `bibtex` are required to resolve citations and the reference list. The `.bst` files other than `sn-mathphys-num.bst` (apacite, aps, basic, chicago, nature, vancouver-*) belong to the template and are unused unless the `\documentclass` option in `sn-article.tex` is changed.
+Two `pdflatex` passes after `bibtex` are required to resolve citations and the reference list. The file keeps its historical `sn-article.tex` name so the Overleaf main-document setting still works; the `sn-jnl.cls` / `sn-*.bst` files are leftovers from the earlier Springer Nature journal template and are no longer used.
 
 There is no Makefile or latexmkrc — run the four commands above directly, or use `latexmk -pdf sn-article.tex` if available.
 
@@ -28,7 +28,8 @@ There is no Makefile or latexmkrc — run the four commands above directly, or u
 
 - `sn-article.tex` — the entire manuscript (title/abstract through Declarations). All section content lives in this one file; there are no `\input`/`\include` sub-files.
 - `sn-bibliography.bib` — BibTeX source, cited via `\cite{}` keys matching entries here (e.g. `biesele2006ju`, `dundes1964morphology`, `Adelani2022`).
-- `sn-jnl.cls`, `sn-*.bst` — vendored Springer Nature template files. Do not edit unless fixing a template-level bug; content changes belong in `sn-article.tex` / `sn-bibliography.bib`.
+- `llncs.cls`, `splncs04.bst` — vendored Springer LNCS template files (from the official ZIP on the LNCS "Information for authors and editors" page). Do not edit; content changes belong in `sn-article.tex` / `sn-bibliography.bib`.
+- `sn-jnl.cls`, `sn-*.bst` — unused Springer Nature journal template files from before the LNCS conversion.
 - `fig.eps`, `empty.eps` — figure assets referenced via `\includegraphics`.
 - `sn-article.pdf`, `sn-article.html`, `user-manual.pdf` — build outputs / template documentation, not edited by hand.
 - `SOURCE_OF_TRUTH.md` — the writing plan for this paper: narrative philosophy, 12-page budget allocation per section, the 5-step introduction pitch arc, citation strategy (which sources are already integrated vs. reserved for later), and a phase-by-phase progress checklist. **Read this before drafting or restructuring any section** — it records author decisions already made and what's still pending.

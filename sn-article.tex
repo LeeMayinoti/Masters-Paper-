@@ -1,61 +1,46 @@
-% Version 3.1 December 2024
-% Springer Nature LaTeX Template for Masters-Paper-
-\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% APA Reference Style
+% Springer Lecture Notes in Computer Science (LNCS) format, official llncs.cls of 2026-09-03
+\documentclass[runningheads]{llncs}
 \usepackage{comment}
-\usepackage[T1]{fontenc}%
-\usepackage{graphicx}%
-\usepackage{multirow}%
-\usepackage{amsmath,amssymb,amsfonts}%
-\usepackage{amsthm}%
-\usepackage{mathrsfs}%
-\usepackage[title]{appendix}%
-\usepackage{xcolor}%
-\usepackage{textcomp}%
-\usepackage{manyfoot}%
-\usepackage{booktabs}%
-\usepackage{algorithm}%
-\usepackage{algorithmicx}%
-\usepackage{algpseudocode}%
-\usepackage{listings}%
-\usepackage{tikz}%
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric}%
+\usepackage[T1]{fontenc}
+\usepackage{cite}% sorted numeric citations, e.g. [10,25]
+\usepackage{bbding}% \Envelope marks the corresponding author
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{newtxtext}% Times, as in Springer's 2026 LNCS sample paper
+\usepackage[varvw]{newtxmath}% provides the amssymb symbols; load after amsmath
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
-\newcommand{\juhoansi}{\mbox{Ju\textbar{}'hoansi}}%
+\usepackage[hidelinks]{hyperref}% clickable citations, refs, URLs; no coloured text (Springer rule)
 
-\theoremstyle{thmstyleone}%
-\newtheorem{theorem}{Theorem}%
-\newtheorem{proposition}[theorem]{Proposition}%
-
-\theoremstyle{thmstyletwo}%
-\newtheorem{example}{Example}%
-\newtheorem{remark}{Remark}%
-
-\theoremstyle{thmstylethree}%
-\newtheorem{definition}{Definition}%
-
-\raggedbottom
+\newcommand{\juhoansi}{\mbox{Ju\textbar{}'hoansi}}
+\setlength{\emergencystretch}{2em}% avoid lines overrunning the LNCS text block
 
 \begin{document}
 
-\title[Computational Narrative Modeling for Indigenous Knowledge Preservation]{\juhoansi{} Narrative Agentic Generator (\texttt{jnang}): Ontologically Grounded Agentic Narrative Generation and Cultural Adaptation for Indigenous African Oral Traditions}
+\title{\juhoansi{} Narrative Agentic Generator (\texttt{jnang}): Ontologically Grounded Agentic Narrative Generation and Cultural Adaptation for Indigenous African Oral Traditions}
+\titlerunning{Computational Narrative Modeling for Indigenous Knowledge Preservation}
 
-%%=============================================================%%
-%% Authors and Affiliations
-%%=============================================================%%
-\author*[1]{\fnm{Lemuel} \sur{Mayinoti}}\email{lemuel.Mayinoti@nust.na}
-\author[1]{\fnm{Naftali} \sur{Indongo}}\email{nindongo@nust.na}
-\author[1]{\fnm{Heike} \sur{Winschiers-Theophilus}}\email{hwinschiers@nust.na}
+\author{Lemuel Mayinoti\textsuperscript{(\Envelope)} \and
+Naftali Indongo \and
+Heike Winschiers-Theophilus}
+\authorrunning{L. Mayinoti et al.}
 
-\affil*[1]{\orgdiv{Department of Software Engineering}, \orgname{Namibia University of Science and Technology}, \orgaddress{\street{13 Jackson Kaujeua Street}, \city{Windhoek}, \country{Namibia}}}
-%%==================================%%
-%% Abstract                         %%
-%%==================================%%
-
-\abstract{Large Language Models (LLMs) can generate fluent stories, but their training data provide limited representation of many indigenous African oral traditions. As a result, generated narratives may reproduce culturally inappropriate structures even when they contain appropriate cultural vocabulary. This work investigates whether combining culturally grounded narrative structures with knowledge-graph retrieval and multi-agent generation can improve the cultural authenticity of generated \juhoansi{} folktales. We introduce the \textit{\juhoansi{} Narrative Agentic Generator (\texttt{jnang})}, which represents narrative knowledge using an RDF ontology and Neo4j knowledge graph and uses specialised agents for generation, structural classification, and evaluation. The system draws on established folkloristic approaches, including Dundes' motifemes and Camp/Bush spatial structure, to guide narrative generation beyond surface-level retrieval. In a pilot evaluation of 16 generated narratives, \texttt{jnang} outperformed a naive baseline on cultural authenticity across all 8 tested themes under independent judging (sign test, $p \approx 0.004$). The baseline also produced European cultural tropes in 2 of 8 stories, while \texttt{jnang} produced none. Importantly, this pilot evaluation relied entirely on LLM-based judges and deterministic keyword checks; no \juhoansi{} community members participated in evaluating the generated stories. The results are further limited by the small sample size and incomplete coverage of the source corpus. These findings suggest that culturally structured retrieval and multi-agent generation are a promising direction for computational approaches to indigenous narrative generation, but meaningful claims about cultural authenticity require validation with \juhoansi{} speakers and communities.}
-
-\keywords{Computational Folkloristics, Indigenous Knowledge Preservation, Large Language Models, Multi-Agent Systems, Knowledge Graphs, \juhoansi{}, Narrative Generation}
+\institute{Department of Software Engineering, Namibia University of Science and Technology, 13 Jackson Kaujeua Street, Windhoek, Namibia\\
+\email{lmayinoti.lm@gmail.com, nindongo@nust.na, hwinschiers@nust.na}}
 
 \maketitle
+
+\begin{abstract}
+Large Language Models (LLMs) can generate fluent stories, but their training data provide limited representation of many indigenous African oral traditions. As a result, generated narratives may reproduce culturally inappropriate structures even when they contain appropriate cultural vocabulary. This work investigates whether combining culturally grounded narrative structures with knowledge-graph retrieval and multi-agent generation can improve the cultural authenticity of generated \juhoansi{} folktales. We introduce the \textit{\juhoansi{} Narrative Agentic Generator (\texttt{jnang})}, which represents narrative knowledge using an RDF ontology and Neo4j knowledge graph and uses specialised agents for generation, structural classification, and evaluation. The system draws on established folkloristic approaches, including Dundes' motifemes and Camp/Bush spatial structure, to guide narrative generation beyond surface-level retrieval. In a pilot evaluation of 16 generated narratives, \texttt{jnang} outperformed a naive baseline on cultural authenticity across all 8 tested themes under independent judging (sign test, $p \approx 0.004$). The baseline also produced European cultural tropes in 2 of 8 stories, while \texttt{jnang} produced none. Importantly, this pilot evaluation relied entirely on LLM-based judges and deterministic keyword checks; no \juhoansi{} community members participated in evaluating the generated stories. The results are further limited by the small sample size and incomplete coverage of the source corpus. These findings suggest that culturally structured retrieval and multi-agent generation are a promising direction for computational approaches to indigenous narrative generation, but meaningful claims about cultural authenticity require validation with \juhoansi{} speakers and communities.
+
+\keywords{Computational Folkloristics \and Indigenous Knowledge Preservation \and Large Language Models \and Multi-Agent Systems \and Knowledge Graphs \and \juhoansi{} \and Narrative Generation}
+\end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
@@ -106,7 +91,7 @@ Propp identified 31 functions that describe the structure of Russian fairy tales
 
 Dundes \cite{dundes1964morphology} argued that Propp's functions are specific to Indo-European tale traditions and do not generalize to oral traditions with different social structures. Working with Native American and African corpora, Dundes identified smaller structural units called \textit{motifemes}: recurring narrative positions (Lack, Interdiction, Violation, Consequence, Mediation, Lack Liquidated, Departure, Return) that combine in short, often symmetrical chains rather than Propp's extended 31-step sequences. Critically, Dundes' motifemes do not presuppose individual heroism, monarchical authority, or punitive antagonist resolution, making them structurally compatible with oral traditions grounded in communal ethics and egalitarian social organization. No prior computational system has used Dundes' motifeme framework as a generative constraint; existing computational narrative work, including Finlayson's \texttt{ProppLearner} \cite{finlayson2012learning,finlayson2017propplearner}, targets and validates against Proppian functions exclusively.
 
-Lévi-Strauss \cite{levistrauss1955structural} offered a complementary perspective, analyzing myths through opposing binary categories (nature/culture, raw/cooked, human/supernatural) rather than sequential functions. For \juhoansi{} narratives, the distinction between the human \textbf{Camp} (social order, kinship obligations, communal fire) and the supernatural \textbf{Bush} (ancestral spirits $g//awasi$, ecological danger, metamorphosis) provides a spatial and ontological axis that organizes narrative movement. However, Lévi-Strauss' structural analysis describes the logic of mythical thought rather than providing a generative grammar for sequencing narrative events.
+Lévi-Strauss \cite{levistrauss1955structural} offered a complementary perspective, analyzing myths through opposing binary categories (nature\slash culture, raw\slash cooked, human\slash supernatural) rather than sequential functions. For \juhoansi{} narratives, the distinction between the human \textbf{Camp} (social order, kinship obligations, communal fire) and the supernatural \textbf{Bush} (ancestral spirits $g//awasi$, ecological danger, metamorphosis) provides a spatial and ontological axis that organizes narrative movement. However, Lévi-Strauss' structural analysis describes the logic of mythical thought rather than providing a generative grammar for sequencing narrative events.
 
 We adopt Dundes' motifemes as the primary generative constraint for three reasons: (1) they were developed for non-European oral traditions and avoid encoding Indo-European cultural assumptions; (2) their compact, episodic chains match the brevity and symmetry of \juhoansi{} storytelling as documented by Biesele \cite{biesele2006ju}; and (3) they provide sequenceable narrative positions suitable for computational implementation. We supplement Dundes with Lévi-Strauss' Camp/Bush spatial axis, which provides the cultural geography that motifeme chains alone do not encode.
 
@@ -334,21 +319,102 @@ propp:ProppianRole a owl:Class .
 \end{lstlisting}
 \end{comment}
 
-The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating relationships such as \texttt{:PERFORMS\_FUNCTION}, \texttt{:HAS\_ROLE}, \texttt{:LACKS}, and \texttt{:FOLLOWS}. During generation, \texttt{context\_builder.py} uses Cypher queries to retrieve subgraphs relevant to the selected narrative  see figure \ref{fig:kg-graph} and \ref{fig:kg-move-chain}. This provides the Generator Agent with both narrative content and its structural relationships.
+The RDF data are imported into Neo4j using \texttt{import\_rdf.py}, creating relationships such as \texttt{:PERFORMS\_FUNCTION}, \texttt{:HAS\_ROLE}, \texttt{:LACKS}, and \texttt{:FOLLOWS}. During generation, \texttt{context\_builder.py} uses Cypher queries to retrieve subgraphs relevant to the selected narrative  see figure \ref{fig:kg-graph} and table \ref{tab:kg-move-chain}. This provides the Generator Agent with both narrative content and its structural relationships.
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=\textwidth,trim=10 10 10 10,clip]{figures/kg-2hop-query.png}
+\begin{tikzpicture}[
+font=\scriptsize,
+nd/.style={rectangle, rounded corners=3pt, draw=black!55, align=center, inner sep=2pt, minimum height=0.55cm},
+fn/.style={nd, fill=cyan!22, text width=1.3cm},
+ch/.style={nd, fill=yellow!30},
+ob/.style={nd, fill=orange!35},
+ma/.style={nd, fill=violet!22},
+ro/.style={nd, fill=pink!40},
+lo/.style={nd, fill=green!18},
+e/.style={-{Latex[length=1.5mm]}, draw=black!55, thin},
+key/.style={nd, minimum height=0.3cm, minimum width=0.45cm, inner sep=0pt}
+]
+% Narrative functions (S4_Move1 ... S4_Move7), in story order
+\foreach \i/\x/\t in {1/0/Elephant hides water,
+                      2/1.65/Mud exposes Elephant,
+                      3/3.3/Brothers track Elephant,
+                      4/4.95/Brothers drink \& urinate,
+                      5/6.6/Urine refuses Elephant,
+                      6/8.25/Brothers slay Elephant,
+                      7/9.9/{Elephant dies, rain falls}}
+  \node[fn] (m\i) at (\x,0) {\t};
+\foreach \a/\b in {2/1,3/2,4/3,5/4,6/5,7/6} \draw[e, thick, draw=black!85] (m\a) -- (m\b);
+
+% Characters, roles, magical agent
+\node[ch] (girl) at (1.65,2.05) {Aardvark Girl\\(G!kun\textbar\textbar{}homdima)};
+\node[ch] (bro)  at (5.0,2.05)  {Aardvark Girl's\\brothers};
+\node[ch] (ele)  at (8.9,1.5)  {The Elephant\\(!xo)};
+\node[ro] (r1) at (1.65,3.15) {Intermediary /\\Informant};
+\node[ro] (r2) at (5.0,3.15)  {Egalitarian Defenders\\/ Liberators};
+\node[ro] (r3) at (8.75,2.65)  {Resource\\Hoarder};
+\node[ma] (power) at (10.45,2.65) {Power to fall\\as rain};
+\draw[e] (girl) -- (r1); \draw[e] (bro) -- (r2); \draw[e] (ele) -- (r3);
+\draw[e] (girl) -- (m2);
+\draw[e] (bro) -- (m3); \draw[e] (bro) -- (m4); \draw[e] (bro) -- (m6);
+\draw[e] (ele.west) -- (m1.north); \draw[e] (ele) -- (m5.north); \draw[e] (ele) -- (m7.north);
+\draw[e] (ele) -- (power);
+\draw[e] (m7.north) -- (power);
+
+% Objects and locations
+\node[ob] (water) at (0,-1.35)    {Water\\(g!u)};
+\node[ob] (mud)   at (1.45,-1.35) {Mud\\(g\textdaggerdbl kaa)};
+\node[ob] (urine) at (7.4,-1.35)  {Urine\\(waq)};
+\node[ob] (spear) at (8.9,-2.45)  {Spears\\(!u!usi)};
+\node[lo] (camp)  at (2.75,-2.45) {The\\Camp};
+\node[lo] (hole)  at (4.6,-2.45)  {Secret\\Waterhole};
+\draw[e] (m1) -- (water); \draw[e] (m2) -- (mud);
+\draw[e] (m4) -- (urine); \draw[e] (m5) -- (urine);
+\draw[e] (m6.south) -- (spear);
+\draw[e] (m2.south) -- (camp);
+\foreach \i in {1,3,4,5,6} \draw[e] (m\i.south) -- (hole);
+
+% Key
+\begin{scope}[shift={(-0.5,-3.3)}]
+\foreach \c/\x/\t in {yellow!30/0/Character, pink!40/1.95/Role, cyan!22/3.25/NarrativeFunction,
+                      orange!35/6.2/Object, violet!22/7.65/MagicalAgent, green!18/10.0/Location}
+  {\node[key, fill=\c] (k) at (\x,0) {}; \node[anchor=west, inner sep=2pt] at (k.east) {\t};}
+\end{scope}
+\node[anchor=north, inner sep=0pt] at (5.2,-3.55) {%
+  \setlength{\tabcolsep}{2.5pt}%
+  \begin{tabular}{@{}ll@{\quad}ll@{}}
+  \texttt{HAS\_ROLE} & Character$\rightarrow$Role &
+  \texttt{INVOLVES\_OBJECT} & Function$\rightarrow$Object or Agent \\
+  \texttt{PERFORMS\_FUNCTION} & Character$\rightarrow$Function &
+  \texttt{OCCURS\_AT} & Function$\rightarrow$Location \\
+  \texttt{FOLLOWS} & Function$\rightarrow$preceding Function &
+  \texttt{HAS\_MAGICAL\_AGENT} & Character$\rightarrow$Agent
+  \end{tabular}};
+\end{tikzpicture}
 \caption{Neo4j 2-hop neighborhood query around a story's narrative functions. The graph connects characters, narrative functions, objects, roles, and locations through typed relationships for the \textit{Elephant} story.}
 \label{fig:kg-graph}
 \end{figure}
 
-\begin{figure}[!tb]
+\begin{table}[!tb]
 \centering
-\includegraphics[width=0.8\textwidth,trim=10 10 10 10,clip]{figures/kg-move-chain-story2.png}
 \caption{Cypher query tracing the sequential motifeme and narrative-move chain for the \textit{Honey and the Flies} story. The retrieved structure provides an ordered sequence of actions, locations, characters, and objects rather than an unordered text excerpt.}
-\label{fig:kg-move-chain}
-\end{figure}
+\label{tab:kg-move-chain}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\newcolumntype{R}[1]{>{\raggedright\arraybackslash}p{#1}}
+\begin{tabular}{@{}R{1.9cm}R{2.8cm}R{1.6cm}R{1.95cm}R{1.85cm}l@{}}
+\toprule
+\textbf{MoveID} & \textbf{NarrativeAction} & \textbf{Location} & \textbf{Characters Involved} & \textbf{Objects Involved} & \textbf{Follows} \\
+\midrule
+\texttt{S2\_Move1\_\allowbreak Harvest} & Woodpecker harvests honey high in tree & High Tree (Bush) & Cardinal Woodpecker (!'aun!'aun) & Honey (zo) & --- \\
+\texttt{S2\_Move2\_\allowbreak WhistleDishes} & Woodpecker whistles carrying pole and dishes up to tree & High Tree (Bush) & Cardinal Woodpecker (!'aun!'aun) & Carrying Pole (!aro), Flat Dishes (tan-l'osi) & \texttt{Move1} \\
+\texttt{S2\_Move3\_\allowbreak Imitation} & Glara attempts to imitate Woodpecker's harvest & High Tree (Bush) & The God G!ara & --- & \texttt{Move2} \\
+\texttt{S2\_Move4\_\allowbreak Failure} & Glara fails to whistle up the dishes (they refuse) & High Tree (Bush) & The God G!ara & --- & \texttt{Move3} \\
+\texttt{S2\_Move5\_\allowbreak Fall} & Glara tries to fly but falls and his stomach bursts & The Ground (Camp) & The God G!ara & --- & \texttt{Move4} \\
+\texttt{S2\_Move6\_\allowbreak Rescue} & Flies bite and sew up Glara's stomach & The Ground (Camp) & Flies (zoaqzoaq) & --- & \texttt{Move5} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{LangGraph Multi-Agent Execution Pipeline}
 
@@ -439,33 +505,31 @@ The system uses three sequential agents. The Generator performs the main narrati
 % \end{figure}
 \begin{figure}[!tb]
 \centering
-\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-box/.style={rectangle, draw, rounded corners, minimum width=2.6cm,
-            minimum height=0.9cm, align=center, fill=gray!8, font=\footnotesize},
-term/.style={rectangle, draw, rounded corners, minimum width=1.4cm,
-             minimum height=0.9cm, align=center, font=\footnotesize},
-dec/.style={diamond, draw, aspect=2, align=center, fill=gray!8,
-            font=\scriptsize, inner sep=1pt},
+font=\scriptsize,
+box/.style={rectangle, draw, rounded corners, minimum width=1.6cm,
+            minimum height=0.8cm, align=center, fill=gray!8},
+term/.style={rectangle, draw, rounded corners, minimum width=0.9cm,
+             minimum height=0.8cm, align=center},
+dec/.style={diamond, draw, aspect=2, align=center, fill=gray!8, inner sep=1pt},
 arr/.style={-{Latex[length=2mm]}, thick}
 ]
 \node[term] (start)  at (0,0)      {start};
-\node[dec]  (router) at (2.9,0)    {input\_story\\provided?};
-\node[box]  (echo)   at (6.6,1.3)  {echo\_input\_story};
-\node[box]  (gen)    at (6.6,-1.3) {Agent 1: Generator};
-\node[box]  (cls)    at (10.1,0)   {Agent 2: Classifier};
-\node[box]  (grd)    at (13.2,0)   {Agent 3: Grader};
-\node[term] (end)    at (15.4,0)   {end};
+\node[dec]  (router) at (1.95,0)   {input\_story\\provided?};
+\node[box]  (echo)   at (4.75,1.0) {echo\_input\_story};
+\node[box]  (gen)    at (4.75,-1.0) {Agent 1:\\Generator};
+\node[box]  (cls)    at (7.4,0)    {Agent 2:\\Classifier};
+\node[box]  (grd)    at (9.4,0)    {Agent 3:\\Grader};
+\node[term] (end)    at (11.0,0)   {end};
 
 \draw[arr] (start) -- (router);
-\draw[arr] (router) |- node[pos=0.75, above, font=\tiny] {yes} (echo);
-\draw[arr] (router) |- node[pos=0.75, below, font=\tiny] {no} (gen);
+\draw[arr] (router) |- node[pos=0.75, above] {yes} (echo);
+\draw[arr] (router) |- node[pos=0.75, below] {no} (gen);
 \draw[arr] (echo) -| (cls);
 \draw[arr] (gen)  -| (cls);
 \draw[arr] (cls) -- (grd);
 \draw[arr] (grd) -- (end);
-\end{tikzpicture}%
-}
+\end{tikzpicture}
 \caption{LangGraph execution pipeline. Stories supplied for classification bypass generation, while new narratives are first produced by the Generator. Both paths then pass through the Classifier and Grader.}
 \label{fig:pipeline}
 \end{figure}
@@ -512,8 +576,8 @@ arr/.style={-{Latex[length=2mm]}, thick}
 \section{Results \& Evaluation}\label{sec:results}
 
  The system was benchmarked \texttt{jnang} against a naive baseline,  the same \texttt{gpt-4o-mini} model prompted for a \juhoansi{} folktale with no ontology, knowledge graph, RAG, or dictionary grounding across 8 pre-registered themes: the 5 preset narrative themes (sharing honey, the Moon's immortality message, a trickster hiding a waterhole, the origin of fire, and the Elephant holding back water) and 3 held-out stories from the source corpus (Ostrich and the Tortoise, Springhare Dances, Ducks and People) absent from both the RDF ontology and the RAG pool, testing generalization rather than memorization. Each of the resulting 16 narratives (one per theme per arm; $N=16$, no repeats  a pilot-scale, indicative comparison rather than a powered study) was scored twice: once by the pipeline's own in-pipeline grader (\texttt{gpt-4o-mini}, the same model family as the Generator, given the Classifier's motifeme analysis as context) and once by an independent, blind judge (Gemini 2.5 Flash, given only the raw story text, with no knowledge of which arm produced it or any prior structural analysis). Two deterministic, non-LLM checks supplement both graders: a European-trope keyword scanner and a click-consonant vocabulary verifier cross-checked against the reference lexicon (\texttt{ju\_dictionary.xls}).
-\noindent\textbf{Sample output.} The following excerpt is from the \texttt{jnang} narrative for the trickster and
-waterhole theme:
+
+\noindent\textbf{Sample output.} The following excerpt is from the \texttt{jnang} narrative for the trickster and waterhole theme:
 
 \begin{quote}
 \small
@@ -547,6 +611,7 @@ version would need to suppress.
 % \end{table}
 
 \begin{table}[h]
+\centering
 \caption{Arm-level means across all 8 themes ($N=8$ per arm), by grader.}\label{tab:results}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -572,6 +637,7 @@ No Unpunished Hoarding Rate & 62\% & 62\% & 38\% & \textbf{88\%} \\
 \noindent\textbf{Generalization.} Three themes absent from both the RDF ontology and RAG pool tested out-of-distribution generalization. Table~\ref{tab:generalization} reports these separately from the 5 preset themes.
 
 \begin{table}[h]
+\centering
 \caption{Cultural authenticity by theme subset (independent judge).}\label{tab:generalization}
 \begin{tabular}{@{}lccc@{}}
 \toprule
@@ -621,10 +687,12 @@ Future work will expand the knowledge graph to the remaining corpus stories, con
 % \end{itemize}
 
 
-\begingroup
-\small
-\medskip
+\begin{credits}
+\subsubsection{\discintname}
+The authors have no competing interests to declare that are relevant to the content of this article.
+\end{credits}
+
+\bibliographystyle{splncs04}
 \bibliography{sn-bibliography}
-\endgroup
 
 \end{document}
